@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Notes (single document)",
+  "type": "object",
+  "required": [
+    "session_id",
+    "recorded_at",
+    "kind",
+    "body"
+  ],
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "pattern": "^\\d{8}-\\d{3}$",
+      "description": "Session id in YYYYMMDD-NNN format, e.g. 20251101-001"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "note",
+        "decision",
+        "action",
+        "timestamp"
+      ],
+      "description": "Type of note"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Main content of the note"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^(?:DEC|ACT)-\\d{3}$",
+      "description": "Decision or action id, e.g. DEC-001 or ACT-001 (per-session numbering)"
+    },
+    "title": {
+      "type": "string"
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "due": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "in-progress",
+        "done"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
