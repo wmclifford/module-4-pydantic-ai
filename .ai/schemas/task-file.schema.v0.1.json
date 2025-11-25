@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wmclifford/ai-coding-support/schemas/task-file.schema.v0.1.json",
+  "title": "Task file schema",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "taskTitle",
+    "status",
+    "rationale",
+    "links",
+    "acceptance",
+    "evidence",
+    "notes",
+    "tags",
+    "blockingTasks"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "description": "Schema version for forward compatibility (e.g. 1.0.0).",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "id": {
+      "type": "string",
+      "description": "Task identifier. Should match the filename but filename-match cannot be enforced by JSON Schema.",
+      "pattern": "^[A-Z]{3,5}-\\d{3,4}$"
+    },
+    "taskTitle": {
+      "type": "string",
+      "description": "Multi-line Markdown title allowed."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "in_review",
+        "done"
+      ],
+      "description": "Task status; follow governance conventions."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Multi-line Markdown explaining why the task exists."
+    },
+    "links": {
+      "type": "object",
+      "required": [
+        "related",
+        "docs"
+      ],
+      "properties": {
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related task IDs or URLs. May be empty."
+        },
+        "docs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Documentation references: URLs, relative paths, or `File.md#anchor` strings."
+        }
+      },
+      "additionalProperties": false
+    },
+    "acceptance": {
+      "type": "object",
+      "required": [
+        "fileGlobs",
+        "commands",
+        "testsMustExist",
+        "minCoverage"
+      ],
+      "properties": {
+        "fileGlobs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Gitignore-style, root-relative globs. At least one required."
+        },
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Shell commands run from repo root (order-preserving)."
+        },
+        "testsMustExist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Globs for mandatory test files; may be empty for non-code tasks."
+        },
+        "minCoverage": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Fraction in [0,1] (e.g. 0.8 == 80%)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": [
+        "commit",
+        "testSummary",
+        "ciRunUrl",
+        "prUrl"
+      ],
+      "properties": {
+        "commit": {
+          "description": "Git SHA (40 hex chars) or empty until filled by the agent.",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            {
+              "type": "string",
+              "maxLength": 0
+            }
+          ]
+        },
+        "timestamp": {
+          "description": "ISO-8601 timestamp when the evidence was recorded.",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "branchName": {
+          "description": "Name of the branch used for this task (pattern: <type>/<TASK-ID>-<slug>).",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "testSummary": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "object",
+              "required": [],
+              "properties": {
+                "test": {
+                  "type": "object",
+                  "description": "Summary of unit test results.",
+                  "required": [
+                    "failed",
+                    "tests"
+                  ],
+                  "properties": {
+                    "errors": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "skipped": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tests": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "integrationTest": {
+                  "type": "object",
+                  "description": "Summary of integration test results.",
+                  "required": [
+                    "failed",
+                    "tests"
+                  ],
+                  "properties": {
+                    "errors": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "skipped": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "tests": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "jacocoTestReport": {
+                  "type": "object",
+                  "description": "Summary of JaCoCo test coverage report.",
+                  "required": [
+                    "line"
+                  ],
+                  "properties": {
+                    "branch": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Branch coverage percentage (e.g. 0.8 == 80%)."
+                    },
+                    "class": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Class coverage percentage (e.g. 0.8 == 80%)."
+                    },
+                    "complexity": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Complexity coverage percentage (e.g. 0.8 == 80%)."
+                    },
+                    "instruction": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Instruction coverage percentage (e.g. 0.8 == 80%)."
+                    },
+                    "line": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Line coverage percentage (e.g. 0.8 == 80%)."
+                    },
+                    "method": {
+                      "type": "number",
+                      "minimum": 0.0,
+                      "maximum": 1.0,
+                      "description": "Method coverage percentage (e.g. 0.8 == 80%)."
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "notes": {
+                  "description": "Additional test summary details.",
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          ],
+          "description": "Free-form or structured summary of test runs and coverage."
+        },
+        "ciRunUrl": {
+          "description": "CI run URL or empty string until available.",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "string",
+              "maxLength": 0
+            }
+          ]
+        },
+        "prUrl": {
+          "description": "Pull request URL or empty string until available.",
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "string",
+              "maxLength": 0
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "notes": {
+      "description": "Short guidance lines for the AI agent. Prefer array of strings for programmatic use, but single string allowed.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional labels for searching/sorting; may be empty."
+    },
+    "blockingTasks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Task IDs that block this task; may be empty."
+    }
+  },
+  "additionalProperties": false
+}
