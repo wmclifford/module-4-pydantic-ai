@@ -60,7 +60,7 @@
             "type": "string"
           },
           "commit_message": {
-            "description": "Commit message of the change",
+            "description": "Commit message of the change (multi-line string)",
             "type": "string"
           },
           "notes": {

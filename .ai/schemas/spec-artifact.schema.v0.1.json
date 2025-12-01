@@ -56,7 +56,7 @@
           }
         },
         "first_commit_message": {
-          "description": "Commit message for the first commit of the task branch",
+          "description": "Commit message for the first commit of the task branch (multi-line string)",
           "type": "string"
         }
       }
