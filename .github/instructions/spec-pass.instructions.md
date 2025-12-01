@@ -39,6 +39,19 @@ best practices are followed and decisions are made with the best possible unders
 - The agent must receive explicit approval from the operator before performing branch creation.
 - Keep prompts and answers concise and machine-readable where possible.
 
+**Dependency Analysis (new requirement):**
+
+- During the Spec pass, analyze the proposed implementation and identify any external dependencies required to complete
+  the task.
+- Prefer reusing dependencies already present in the repository. Only propose new libraries when necessary and
+  justified.
+- Capture findings in the spec artifact under `requiredDependencies` with two arrays:
+    - `runtime`: production/runtime packages
+    - `dev`: development/testing-only packages
+- If in doubt about library selection or acceptable versions, add a QUESTION for the operator and avoid hard pinning
+  unless required.
+- This information will guide the Scaffold pass to install dependencies using `uv` with separate commits.
+
 **Notes:**
 
 - This instruction file complements `.github/prompts/spec-pass.prompt.md` and provides higher-level guidance for the

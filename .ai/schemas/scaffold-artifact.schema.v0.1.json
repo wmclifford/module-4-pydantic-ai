@@ -70,6 +70,35 @@
         }
       }
     },
+    "resolvedDependencies": {
+      "description": "Concrete dependencies installed during the Scaffold pass, resolved to exact versions. Mirrors the Spec's requiredDependencies.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runtime": {
+          "description": "Exact runtime packages installed (name==version).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dev": {
+          "description": "Exact development packages installed (name==version).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lockfileUpdated": {
+          "description": "Whether the lockfile (uv.lock) was updated as part of dependency installation.",
+          "type": "boolean"
+        },
+        "notes": {
+          "description": "Notes about installation commands, issues, or platform-specific considerations.",
+          "type": "string"
+        }
+      }
+    },
     "unresolvedQuestions": {
       "description": "List of questions that were not answered during the scaffold pass",
       "anyOf": [

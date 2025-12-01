@@ -102,6 +102,31 @@
         }
       }
     },
+    "requiredDependencies": {
+      "description": "Dependencies the implementation will require. This is populated during the Spec pass after dependency analysis and guides installation during Scaffold.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runtime": {
+          "description": "Packages needed at runtime (production). Use PEP 440 compatible specifiers, e.g., 'httpx>=0.27,<1'.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dev": {
+          "description": "Packages needed for development/testing only (dev dependencies).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "description": "Short notes or rationale for dependency choices (multi-line string).",
+          "type": "string"
+        }
+      }
+    },
     "questions": {
       "description": "List of questions to ask the operator during the spec pass",
       "anyOf": [

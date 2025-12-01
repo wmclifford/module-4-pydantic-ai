@@ -19,6 +19,9 @@ Produce a concise, review-ready "spec" (plan) describing the planned diffs for t
 - explain why each change is required, and
 - describe the branch/commit plan that will be used if the spec is approved.
 
+Additionally, perform a dependency analysis for the proposed implementation and explicitly list any external libraries
+that will be required.
+
 Do not make edits to existing code yet. This pass only produces the planned diffs and any clarifying questions.
 
 ## Constraints
@@ -29,6 +32,9 @@ Do not make edits to existing code yet. This pass only produces the planned diff
   [instructions](../instructions/spec-pass.instructions.md)).
 - The output must be limited to the planned diffs and a short list of QUESTIONS (if any).
 - Do not include running tests or builds in this pass; these are handled in later passes.
+- Perform a lightweight dependency analysis and include any external packages needed for implementation or testing under
+  `requiredDependencies` in the spec artifact, following the schema fields `requiredDependencies.runtime` and
+  `requiredDependencies.dev`.
 
 ## Instructions (execute in order)
 
@@ -42,7 +48,12 @@ Do not make edits to existing code yet. This pass only produces the planned diff
 - an approximate region or marker (e.g., "add new class X in `src/tools/x.py` after import statements")
 - a short justification tying the change to the task's acceptance criteria
 
-5. If `write_spec_artifact: true` is in the prompt header, write two artifacts to the repo under
+5. Perform a dependency analysis based on the planned changes:
+    - Identify external runtime dependencies (production) and development/test dependencies.
+    - Prefer existing libraries already in the project; only add new ones when necessary.
+    - Capture them in a `requiredDependencies` object with `runtime` and `dev` arrays. Include brief notes if needed.
+
+6. If `write_spec_artifact: true` is in the prompt header, write two artifacts to the repo under
    `.ai/tasks/{{ task_id }}/`:
 
 - `spec.yaml` - a machine-readable YAML spec following the project's schema
@@ -51,12 +62,13 @@ Do not make edits to existing code yet. This pass only produces the planned diff
   markers. Note: writing artifacts is permitted in this pass, but do NOT commit them until the operator approves the
   spec and instructs the agent to create the task branch (see step 6).
 
-6. Describe the branch and commit plan to be executed upon approval (branch name pattern, first commit must be the
+7. Describe the branch and commit plan to be executed upon approval (branch name pattern, first commit must be the
    updated task file with status changed to `in_progress` and a note; include that the `*.yaml` artifacts under
    `.ai/tasks/{{ task_id }}/` will be committed together with the updated task file as part of the FIRST commit on
    the new branch).
-7. Provide 1–3 QUESTIONS for the operator if any conventions or task details are ambiguous.
-8. Wait for operator approval before creating branches or committing any files.
+8. Provide 1–3 QUESTIONS for the operator if any conventions or task details are ambiguous — include any uncertainty
+   about dependency choices (library selection, versions, runtime vs dev).
+9. Wait for operator approval before creating branches or committing any files.
 
 ## Acceptance Criteria
 

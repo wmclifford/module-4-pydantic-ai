@@ -138,6 +138,16 @@ for the task). Populate these where helpful.
     - Local: linear history per task (rebase or squash locally).
     - Remote: **squash merges** recommended; PR title must follow Conventional Commits format.
 
+### Dependency Management
+
+- During the Spec pass, perform a quick dependency analysis and propose `requiredDependencies` split into `runtime` and `dev` arrays in the spec artifact.
+- During the Scaffold pass, install dependencies via `uv` and commit those changes separately using Conventional Commits. Examples:
+  - `uv add httpx pydantic-settings`
+  - `uv add --dev pytest pytest-cov`
+  - Commit: `chore(deps): add httpx and pytest` with `Refs: <TASK-ID>` in the footer.
+- Record exact installed versions in `scaffold.yaml` under `resolvedDependencies`.
+- In the Stabilize pass, run a pre-flight check: ensure deps are installed/synced (`uv sync`) before running tests.
+
 ---
 
 ## Task Management

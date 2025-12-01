@@ -20,6 +20,7 @@ be referred to as the "SSS" or "PIV" loop, depending on the operator's preferenc
 
 - Design the change safely.
 - Produce planned diffs and write spec artifacts for handoff.
+- Perform a lightweight dependency analysis and list `requiredDependencies` (runtime/dev) to guide implementation.
 - Existing sources remain unmodified.
 
 **Pass 2: Scaffold (Implement)**
@@ -27,10 +28,11 @@ be referred to as the "SSS" or "PIV" loop, depending on the operator's preferenc
 - Apply the planned diffs.
 - Commit minimal, logical changes that implement the spec (one commit per planned diff).
 - Produce scaffolding artifacts for handoff.
+- If `requiredDependencies` were specified in the spec, install them using `uv` and create a dedicated dependency commit before code changes.
 
 **Pass 3: Stabilize (Validate)**
 
-- Run checks (linters, automated tests, etc.) to ensure the change is stable.
+- Run a pre-flight dependency check, then run checks (linters, automated tests, etc.) to ensure the change is stable.
 - Fix issues found by checks, if any; commit changes.
 - Prepare the branch for review.
 - Update the task YAML file so that the status is set to `in_review`, and evidence is added. Commit the updated task
@@ -95,6 +97,10 @@ tasks.
     - Scaffold: `.ai/schemas/scaffold-artifact.schema.v0.1.json`
     - Stabilize: `.ai/schemas/stabilize-artifact.schema.v0.1.json`
     - Task File: `.ai/schemas/task-file.schema.v0.1.json`
+ - **Dependencies**:
+    - Analyze and document `requiredDependencies` during Spec.
+    - Install dependencies via `uv` during Scaffold and commit those changes separately using Conventional Commits.
+    - Record resolved versions in `scaffold.yaml` under `resolvedDependencies`.
 - **Evidence**: when updating `evidence.testSummary` in `.ai/tasks/{{ task_id }}.yaml`, use the object shape
   described in `.ai/schemas/task-file.schema.v0.1.json`. Evidence may also include `timestamp` (ISO-8601) and
   `branchName` (string).
@@ -118,6 +124,7 @@ consume.
     - read the task file `.ai/tasks/{{ task_id }}.yaml`,
     - read the spec artifact schema file `.ai/schemas/spec-artifact.schema.v0.1.json`,
     - propose and refine `planned_diffs` with the operator.
+    - perform dependency analysis and propose `requiredDependencies` (runtime/dev) with rationale.
 2. Still on `main`, write (uncommitted) artifacts:
     - `.ai/tasks/{{ task_id }}/spec.yaml`
     - `.ai/tasks/{{ task_id }}/planned-diffs.md`
@@ -136,6 +143,7 @@ consume.
 
 - Planned diffs in the chat.
 - `.ai/tasks/{{ task_id }}/planned-diffs.md` and `.ai/tasks/{{ task_id }}/spec.yaml` files.
+- Spec artifact includes `requiredDependencies` when applicable.
 - First branch commit (after approval) that contains the task file status change and the spec artifacts.
 
 ### Pass 2: Scaffold (Implement)
@@ -152,19 +160,21 @@ consume.
 
 1. The agent validates `.ai/tasks/{{ task_id }}/spec.yaml` against `.ai/schemas/spec-artifact.schema.v0.1.json` and
    confirms the task branch is checked out.
-2. The agent applies `planned_diffs` in order. For each change, it stages and commits the change to the branch using
+2. If `requiredDependencies` are present, the agent installs them using `uv add` / `uv add --dev` and creates a dedicated Conventional Commit containing only dependency changes (include lockfile updates). The resolved packages and versions will be recorded in `scaffold.yaml`.
+3. The agent applies `planned_diffs` in order. For each change, it stages and commits the change to the branch using
    the Conventional Commits message format.
-3. The agent writes the scaffold artifacts:
+4. The agent writes the scaffold artifacts:
     - `.ai/tasks/{{ task_id }}/scaffold.yaml` (machine-readable; validated against
       `.ai/schemas/scaffold-artifact.schema.v0.1.json`)
     - `.ai/tasks/{{ task_id }}/scaffold-report.md` (human-friendly)
-4. The agent commits the scaffold artifacts using a Conventional Commit with the appropriate scope (e.g.,
+5. The agent commits the scaffold artifacts using a Conventional Commit with the appropriate scope (e.g.,
    `chore(artifacts): add scaffold artifacts`) and includes the task reference in the footer.
 
 **Output of Scaffold:**
 
 - A series of Conventional Commits applying the planned diffs.
 - `.ai/tasks/{{ task_id }}/scaffold.yaml` and `.ai/tasks/{{ task_id }}/scaffold-report.md` committed to the branch.
+ - If applicable, a dedicated `chore(deps): ...` commit and a Dependencies section in `scaffold-report.md`.
 
 ### Pass 3: Stabilize (Validate)
 
@@ -179,17 +189,21 @@ consume.
 
 1. The agent validate `.ai/tasks/{{ task_id }}/scaffold.yaml` (and optionally re-validates
    `.ai/tasks/{{ task_id }}/spec.yaml`).
-2. The agent runs checks: linters, unit tests, integration tests, quality gates (coverage), as applicable.
-3. The agent performs up to a few small fix iterations. Each fix is committed using a Conventional Commit.
-4. The agent writes stabilize artifacts and validates the YAML:
+2. Pre-flight dependency check:
+   - Ensure `pyproject.toml` and `uv.lock` are present; if missing or out-of-date, run `uv sync`.
+   - Verify that dependencies specified in `requiredDependencies` (from spec) are satisfied in the environment; if not, run `uv add`/`uv sync` and document actions.
+   - If dependency resolution issues occur, stop after at most one targeted attempt, document in `stabilize-report.md`, and ask the operator.
+3. The agent runs checks: linters, unit tests, integration tests, quality gates (coverage), as applicable.
+4. The agent performs up to a few small fix iterations. Each fix is committed using a Conventional Commit.
+5. The agent writes stabilize artifacts and validates the YAML:
     - `.ai/tasks/{{ task_id }}/stabilize.yaml` (machine-readable; `.ai/schemas/stabilize-artifact.schema.v0.1.json`)
     - `.ai/tasks/{{ task_id }}/stabilize-report.md` (human-friendly)
-5. The agent updates the task file (`.ai/tasks/{{ task_id }}.yaml`):
+6. The agent updates the task file (`.ai/tasks/{{ task_id }}.yaml`):
     - `status: in_review`
     - `evidence`: include `commit` (SHA), `branchName` (optional), `timestamp` (ISO-8601) (optional), plus `testSummary`
       as an OBJECT per `.ai/schemas/task-file.schema.v0.1.json`. Include optional `ciRunUrl` and `prUrl` when available.
-6. The agent commits the task file and stabilize artifacts.
-7. The agent pushes the branch and opens a PR to the chosen base branch. Include links to artifacts in the PR body.
+7. The agent commits the task file and stabilize artifacts.
+8. The agent pushes the branch and opens a PR to the chosen base branch. Include links to artifacts in the PR body.
 
 **Output of Stabilize:**
 

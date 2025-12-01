@@ -18,6 +18,9 @@ write_scaffold_artifact: true
 Take a previously approved spec artifact and apply the planned diffs to the repository. Produce a short scaffold
 report documenting the applied diffs and commit SHAs.
 
+Also, handle dependency installation described by the spec's `requiredDependencies` prior to applying source changes,
+committing these dependency updates separately.
+
 ## Constraints
 
 - If not provided, ask the operator for the TASK ID or the path to the spec artifact.
@@ -30,6 +33,9 @@ report documenting the applied diffs and commit SHAs.
   [the commit instructions](../git-commit-instructions.md).
 - When attempting to resolve ambiguous markers or locations for `modify` diffs, make at most 3 targeted attempts before
   falling back to a TODO marker and recording a QUESTION in the scaffold report.
+- If the spec artifact contains `requiredDependencies`, install them using the project's package manager (`uv`) before
+  applying code changes. Create a dedicated commit only for dependency changes (e.g., `chore(deps): add <packages>`),
+  and include the task reference in the footer.
 
 ## Instructions (execute in order)
 
@@ -40,7 +46,16 @@ report documenting the applied diffs and commit SHAs.
    validation fails, present errors and stop.
 4. Confirm the current git branch matches `branch_plan.initial_branch_name` from the spec. If it does not, stop and
    ask the operator to check out the correct branch.
-5. For each entry in `planned_diffs` (in order):
+5. If `requiredDependencies` are present in the spec:
+
+- Install runtime dependencies with `uv add <pkg[==ver] ...>`.
+- Install development/test dependencies with `uv add --dev <pkg[==ver] ...>`.
+- If a lockfile changes, include it in the commit.
+- Make a separate Conventional Commit for these dependency changes with a clear message, e.g.,
+  `chore(deps): add httpx and pytest` and include `Refs: {{ task_id }}` in the footer.
+- Record the resolved packages and versions under `resolvedDependencies` in the scaffold artifact to be generated later.
+
+6. For each entry in `planned_diffs` (in order):
 
 - If `change` == `add`: create the file and insert the content or marker-specified addition. If no content is
   provided in the spec, create a clear placeholder with a TODO and a short comment explaining what's expected.
@@ -54,18 +69,21 @@ report documenting the applied diffs and commit SHAs.
   if missing, record a question and skip).
 - After applying each file change, stage and commit the change with a Conventional Commit message.
 
-6. After all diffs are processed, write two artifact files under `.ai/tasks/{{ task_id }}/`:
+7. After all diffs are processed, write two artifact files under `.ai/tasks/{{ task_id }}/`:
 
 - `scaffold.yaml` - (machine-readable) containing applied diffs and their commit SHAs
 - `scaffold-report.md` - (human-friendly) containing:
     - summary header (task_id, author, created_at from spec)
     - list of applied diffs with commit SHA for each
     - any QUESTIONS or unresolved markers
+    - a Dependencies section listing `requiredDependencies` from the spec and the `resolvedDependencies` actually
+      installed
     - timestamp and agent identity
 
 7. Stage and commit the scaffold artifacts with a Conventional Commit message:
    `chore({{ task_id }}): add scaffold artifacts`.
-8. Present a concise summary to the operator with the list of commits and any QUESTIONS. Wait for the operator to
+8. Present a concise summary to the operator with the list of commits, dependency changes (if any), and any QUESTIONS.
+   Wait for the operator to
    review before proceeding to stabilize.
 
 ## Acceptance Criteria
@@ -74,7 +92,7 @@ report documenting the applied diffs and commit SHAs.
 - Each applied diff produced a separate Conventional Commit with a descriptive message that includes the
   `{{ task_id }}` in the message footer.
 - `.ai/tasks/{{ task_id }}/scaffold.yaml` and `.ai/tasks/{{ task_id }}/scaffold-report.md` exist and document
-  applied diffs, commit SHAs, and questions.
+  applied diffs, commit SHAs, dependency resolution details, and questions.
 - No files outside the allowed set were modified.
 
 ## Output

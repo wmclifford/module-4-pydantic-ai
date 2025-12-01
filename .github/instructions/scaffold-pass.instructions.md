@@ -34,6 +34,13 @@ notes in `.ai/tasks/{{ task_id }}/scaffold-notes.md` when appropriate.
     - `delete` -> `chore`
     - `rename` -> `refactor`
     - `test` -> `test`
+- If the spec artifact includes `requiredDependencies`, install them before applying source changes using `uv`:
+    - Runtime deps: `uv add <pkg[==ver]> ...`
+    - Dev/test deps: `uv add --dev <pkg[==ver]> ...`
+    - Stage and commit only dependency-related files (e.g., pyproject.toml, uv.lock) with a Conventional Commit such as
+      `chore(deps): add httpx and pytest` and include `Refs: {{ task_id }}` in the footer.
+    - Record the exact installed packages (name==version) to include later in `resolvedDependencies` inside
+      `.ai/tasks/{{ task_id }}/scaffold.yaml`.
 - After completing changes, create two scaffold artifacts in `.ai/tasks/{{ task_id }}/`:
     - `scaffold.yaml` - machine-readable YAML report listing applied diffs and commit SHAs (for automation and audit)
     - `scaffold-report.md` - human-friendly summary with applied diffs, small unified-diff sketches (if helpful),
@@ -55,6 +62,8 @@ notes in `.ai/tasks/{{ task_id }}/scaffold-notes.md` when appropriate.
 - If a `modify` cannot find a `marker`, do not edit the file-instead add a TODO marker at a reasonable place and
   record a question in the report.
 - For `rename`, the `file` field should provide both `from` and `to` paths; if missing, ask the operator.
+- When installing dependencies, prefer minor/patch ranges consistent with the spec notes. If installation fails or
+  conflicts arise, document the issue in `.ai/tasks/{{ task_id }}/scaffold-notes.md` and ask the operator for guidance.
 
 **Safety:**
 
