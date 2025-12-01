@@ -13,9 +13,6 @@ def main():
     parser.add_argument(
         "--version", action="version", version="Web Search Agent 0.1.0"
     )
-    parser.add_argument(
-        "--help", "-h", action="help", help="Show this help message and exit"
-    )
 
     # For now, just print help if no arguments are provided
     if len(sys.argv) == 1:
