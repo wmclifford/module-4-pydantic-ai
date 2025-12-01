@@ -1,0 +1,70 @@
+schemaVersion: 1.0.0
+id: TASK-011
+taskTitle: Align documentation with 3-pass plan workflow
+status: pending
+rationale: >-
+  Ensure that docs/TASKS.md and the .ai/tasks directory align with the
+  repository’s three-pass workflow (Spec, Scaffold, Stabilize) so that future
+  work can be driven by structured task artifacts.
+links:
+  related:
+    - TASK-001
+    - TASK-002
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+    - .github/instructions/3-pass-plan.instructions.md
+acceptance:
+  fileGlobs:
+    - docs/TASKS.md
+    - docs/PLANNING.md
+    - .ai/tasks/TASK-001.yaml
+    - .ai/tasks/TASK-002.yaml
+    - .ai/tasks/TASK-003.yaml
+    - .ai/tasks/TASK-004.yaml
+    - .ai/tasks/TASK-005.yaml
+    - .ai/tasks/TASK-006.yaml
+    - .ai/tasks/TASK-007.yaml
+    - .ai/tasks/TASK-008.yaml
+    - .ai/tasks/TASK-009.yaml
+    - .ai/tasks/TASK-010.yaml
+    - .ai/tasks/TASK-011.yaml
+  commands: [ ]
+  testsMustExist: [ ]
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Ensure documentation and task artifacts are structured so that each task
+    can be executed via the 3-pass plan, with clear status transitions and
+    evidence fields.
+
+  Design expectations:
+  - docs/TASKS.md should accurately reflect the current set of tasks and their
+    statuses (pending, in_progress, in_review, done).
+  - For each active task (TASK-001 through TASK-010), a corresponding
+    `.ai/tasks/TASK-XXX.yaml` file should exist, using the agreed schema and
+    containing a clear rationale, acceptance criteria, and notes for the AI
+    agent.
+  - The relationship between docs/TASKS.md entries and .ai/tasks YAML files
+    should be documented (e.g., in docs/PLANNING.md or README) so contributors
+    know how to add or update tasks.
+  - Guidance should be present on how to transition tasks through
+    pending → in_progress → in_review → done, including when to update
+    evidence fields (commit, timestamp, testSummary, ciRunUrl, prUrl).
+
+  Scope:
+  - This task is more about process and documentation alignment than code.
+  - It may be revisited as new tasks are added or as the workflow evolves.
+tags:
+  - process
+  - 3-pass
+blockingTasks:
+  - TASK-001
+  - TASK-002

@@ -1,0 +1,80 @@
+schemaVersion: 1.0.0
+id: TASK-002
+taskTitle: Implement configuration, env management, and initial CI workflow
+status: pending
+rationale: >-
+  Implement configuration loading for the web-search agent using Pydantic
+  models based on environment variables, and add a minimal GitHub Actions CI
+  workflow to run formatting and tests on pushes and pull requests.
+links:
+  related:
+    - TASK-001
+    - TASK-009
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/config.py
+    - .env.example
+    - .github/workflows/ci.yml
+    - tests/test_config.py
+  commands:
+    - pytest tests/test_config.py
+  testsMustExist:
+    - tests/test_config.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Define Pydantic-based configuration models for LLM configuration
+    (`LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_CHOICE`) and search
+    backends (`BRAVE_API_KEY`, `SEARXNG_BASE_URL`).
+  - Implement a `load_config()` function that reads environment variables,
+    performs validation, and returns a top-level AppConfig enforcing that at
+    least one search backend is configured.
+  - Validation behavior should be clear for missing or malformed environment
+    variables (e.g., informative exceptions or error messages).
+  - Provide a root-level `.env.example` documenting all relevant environment
+    variables with comments and no secrets.
+  - Add a minimal GitHub Actions workflow (e.g., `.github/workflows/ci.yml`)
+    that runs at minimum a linter (ruff or equivalent) and pytest on pushes and
+    pull requests.
+
+  File-level expectations:
+  - `web_search_agent/config.py`:
+    - Contains Pydantic models for LLM and search backend configuration.
+    - Exposes a `load_config()` function as the single entrypoint for loading
+      configuration used by the agent, tools, CLI, and MCP server.
+  - `.env.example`:
+    - Lists all required and optional environment variables used by the agent.
+    - Includes brief comments for each variable explaining its purpose.
+  - `.github/workflows/ci.yml`:
+    - Installs dependencies and runs linting (ruff or similar) and pytest.
+    - Triggers on pushes and pull requests.
+
+  Testing notes:
+  - `tests/test_config.py` should include tests that:
+    - Verify successful configuration loading when all required variables are
+      present and valid.
+    - Verify behavior (exceptions or error messages) when required variables
+      are missing or malformed.
+    - Optionally verify behavior when only one search backend is configured
+      versus both.
+
+  Scope:
+  - This task assumes the package layout from TASK-001 is in place.
+  - It should not implement Brave or SearXNG HTTP calls or Pydantic AI agent
+    logic; those belong to later tasks (TASK-003–TASK-005).
+  - CI can start simple here and be extended further in TASK-009.
+tags:
+  - config
+  - ci
+blockingTasks:
+  - TASK-001

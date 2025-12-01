@@ -1,0 +1,91 @@
+schemaVersion: 1.0.0
+id: TASK-005
+taskTitle: Implement Pydantic AI web-search agent
+status: pending
+rationale: >-
+  Define a Pydantic AI agent that uses the Brave and SearXNG tools to answer
+  web search questions, choosing the appropriate backend based on
+  configuration and providing summarized responses.
+links:
+  related:
+    - TASK-001
+    - TASK-002
+    - TASK-003
+    - TASK-004
+    - TASK-006
+    - TASK-007
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/agent.py
+    - web_search_agent/config.py
+    - tests/test_agent.py
+  commands:
+    - pytest tests/test_agent.py
+  testsMustExist:
+    - tests/test_agent.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Create a Pydantic AI agent definition that can accept natural-language web
+    search queries, decide which backend tool (Brave or SearXNG) to call based
+    on configuration, and return a concise, structured answer.
+
+  Design expectations:
+  - Implement the agent in `web_search_agent/agent.py` using the Pydantic AI
+    framework, wiring in the Brave and SearXNG search tools implemented in
+    TASK-003 and TASK-004.
+  - The agent reads configuration from `load_config()` (TASK-002) to determine
+    which backends are available and which is preferred when both are
+    configured.
+  - Backend selection rules:
+    - If only Brave is configured, always use Brave.
+    - If only SearXNG is configured, always use SearXNG.
+    - If both are configured, use a deterministic selection rule, such as a
+      SEARCH_BACKEND setting or documented default (e.g., Brave).
+    - If no backend is configured, raise a clear, user-facing error indicating
+      configuration is incomplete.
+  - Provide a simple public interface (function or method) that other layers
+    (CLI, MCP) can call to perform a "web search and summarize" operation given
+    a query and optional parameters.
+
+  File-level expectations:
+  - `web_search_agent/agent.py`:
+    - Contains the agent definition, including system prompt, tool bindings,
+      and a convenient wrapper for external callers.
+  - `web_search_agent/config.py`:
+    - Includes any additional configuration required to choose between
+      backends (e.g., SEARCH_BACKEND enum/string).
+
+  Testing notes:
+  - `tests/test_agent.py` should:
+    - Verify backend selection behavior when only Brave is configured, only
+      SearXNG is configured, both are configured, and neither is configured.
+    - Verify that the agent propagates or wraps errors from tools in a clear
+      way.
+    - Optionally verify that the agent's response includes key information from
+      search results (e.g., top titles and URLs) when tools are mocked.
+
+  Scope:
+  - This task focuses on Pydantic AI agent wiring and logic, not on HTTP
+    details of Brave/SearXNG (handled in TASK-003/TASK-004) nor on CLI or MCP
+    interfaces (handled in TASK-006/TASK-007).
+  - The spec pass should consult the Pydantic AI documentation (e.g., the
+    weather-agent example) to design an idiomatic agent.
+tags:
+  - agent
+  - pydantic-ai
+blockingTasks:
+  - TASK-001
+  - TASK-002
+  - TASK-003
+  - TASK-004

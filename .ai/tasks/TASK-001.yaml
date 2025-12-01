@@ -1,0 +1,59 @@
+schemaVersion: 1.0.0
+id: TASK-001
+taskTitle: Design and scaffold web_search_agent package layout
+status: pending
+rationale: >-
+  Create the initial Python package structure for the Pydantic AI web-search
+  agent so that later tasks can focus on configuration, tools, agent logic, MCP
+  integration, and CLI behavior without worrying about layout. This task
+  establishes the `web_search_agent` package, core modules, and a minimal CLI
+  entry point stub.
+links:
+  related: [ ]
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/**
+    - tests/test_package_layout.py
+  commands:
+    - pytest tests/test_package_layout.py
+  testsMustExist:
+    - tests/test_package_layout.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  - The `web_search_agent` package must exist and be importable.
+  - Create the following modules with high-level docstrings describing their
+    responsibilities only (no full business logic yet):
+    - web_search_agent/config.py: configuration loading interfaces and
+      placeholder Pydantic models.
+    - web_search_agent/models.py: placeholder data models for search results
+      and related entities.
+    - web_search_agent/tools.py: placeholder module for Brave and SearXNG tool
+      implementations.
+    - web_search_agent/agent.py: placeholder module for the Pydantic AI agent
+      definition.
+    - web_search_agent/mcp_server.py: placeholder module for FastMCP server
+      wiring.
+    - web_search_agent/cli.py: CLI entrypoints (stubs) for single-command and
+      REPL modes.
+  - A CLI stub should be wired either via `main.py` or a console script so that
+    it can be invoked from the command line and print at least a help or
+    version message.
+  - No external API calls (Brave/SearXNG) or Pydantic AI agent logic should be
+    implemented in this task; those are deferred to later tasks (TASK-002 and
+    onward).
+  - Add a basic test file `tests/test_package_layout.py` to verify that the
+    `web_search_agent` package and its core modules can be imported.
+tags:
+  - scaffolding
+  - layout
+blockingTasks: [ ]

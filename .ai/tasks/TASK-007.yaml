@@ -1,0 +1,74 @@
+schemaVersion: 1.0.0
+id: TASK-007
+taskTitle: Wire FastMCP server around the agent
+status: pending
+rationale: >-
+  Create a FastMCP-based MCP server that exposes the web-search agent as MCP
+  tools, allowing external MCP-compatible clients to perform web searches via
+  the agent.
+links:
+  related:
+    - TASK-002
+    - TASK-005
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/mcp_server.py
+    - tests/test_mcp_server.py
+    - pyproject.toml
+  commands:
+    - pytest tests/test_mcp_server.py
+  testsMustExist:
+    - tests/test_mcp_server.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Implement a FastMCP-based server entrypoint that initializes configuration
+    and the Pydantic AI agent and exposes at least one MCP tool for web
+    search.
+
+  Design expectations:
+  - Implement server startup and tool registration in
+    `web_search_agent/mcp_server.py` using the FastMCP library.
+  - Define at least one MCP tool, e.g.,
+    `web_search(query: str, max_results: int = 5)`, that delegates to the
+    agent's web search interface.
+  - Initialize configuration via `load_config()` and construct the agent
+    defined in TASK-005.
+  - Translate errors from the agent or backends into structured MCP error
+    responses.
+  - Provide a simple entrypoint, such as `python -m web_search_agent.mcp_server`
+    or a console script, for starting the server locally.
+
+  File-level expectations:
+  - `web_search_agent/mcp_server.py`:
+    - Contains all FastMCP initialization, tool definitions, and run logic.
+  - `pyproject.toml`:
+    - Declares FastMCP and related dependencies.
+    - Optionally defines a console script for the MCP server.
+
+  Testing notes:
+  - `tests/test_mcp_server.py` should:
+    - Verify that MCP tools are registered correctly.
+    - Verify that a basic `web_search` call reaches the agent using mocks.
+
+  Scope:
+  - This task depends on the agent definition from TASK-005 and configuration
+    from TASK-002.
+  - The spec pass should consult FastMCP documentation to design idiomatic
+    server and tool definitions.
+tags:
+  - mcp
+  - server
+blockingTasks:
+  - TASK-002
+  - TASK-005

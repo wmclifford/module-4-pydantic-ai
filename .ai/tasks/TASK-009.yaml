@@ -1,0 +1,58 @@
+schemaVersion: 1.0.0
+id: TASK-009
+taskTitle: Extend CI workflows for formatting and quality checks
+status: pending
+rationale: >-
+  Extend the initial CI workflow to enforce code formatting and quality checks
+  (e.g., black, ruff, pytest) on pushes and pull requests, aligning with
+  project conventions.
+links:
+  related:
+    - TASK-002
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - .github/workflows/ci.yml
+    - pyproject.toml
+    - README.md
+  commands:
+    - echo "CI workflow validated via GitHub Actions"  # placeholder command
+  testsMustExist: [ ]
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Ensure GitHub Actions workflows consistently run formatting and test
+    commands, failing the build on errors and reflecting the project’s
+    formatting and testing standards.
+
+  Design expectations:
+  - `.github/workflows/ci.yml` should:
+    - Include steps to run ruff (or equivalent linter), black (if used), and
+      pytest.
+    - Trigger on pushes and pull requests to main branches.
+    - Fail when linting or tests fail.
+  - `pyproject.toml` should:
+    - Contain tool configurations for linters/formatters (ruff/black) and
+      testing (pytest).
+  - `README.md` (or contributing docs) should:
+    - Document CI behavior and expectations for contributors.
+
+  Scope:
+  - This task builds on the initial workflow from TASK-002 and focuses on
+    tightening quality gates rather than introducing new functionality.
+  - Actual validation of CI behavior occurs via GitHub; local dry-runs or
+    workflow testing tools can be used where appropriate.
+tags:
+  - ci
+  - quality
+blockingTasks:
+  - TASK-002

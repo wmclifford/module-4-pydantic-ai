@@ -1,0 +1,93 @@
+schemaVersion: 1.0.0
+id: TASK-006
+taskTitle: Implement modern CLI interface (single-command and REPL)
+status: pending
+rationale: >-
+  Implement a clean, modern command-line interface for the web-search agent
+  using a library such as typer. The CLI should support both single-command
+  (one-off query) and conversational REPL modes, providing an experience
+  similar to other AI agent CLIs.
+links:
+  related:
+    - TASK-001
+    - TASK-005
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/cli.py
+    - pyproject.toml
+    - tests/test_cli.py
+  commands:
+    - pytest tests/test_cli.py
+  testsMustExist:
+    - tests/test_cli.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Provide a CLI that can be invoked from the terminal to run a single web
+    search or start an interactive session with the agent, with clear help,
+    backend selection options, and basic tests.
+
+  Design expectations:
+  - Implement a dedicated CLI module, e.g., `web_search_agent/cli.py`, using a
+    modern Python CLI library (preferably typer).
+  - Expose the CLI via `python -m web_search_agent` and/or a console script
+    defined in `pyproject.toml`.
+  - Define at least two subcommands (names may vary but must be documented),
+    such as:
+    - `single`: run one query and exit.
+    - `repl`: start an interactive session that maintains conversation state.
+
+  Single-command mode behavior:
+  - Accept a search query as a positional argument or option.
+  - Provide optional flags for max results and basic verbosity/logging.
+  - Accept an optional `--backend` override when both Brave and SearXNG are
+    available, otherwise using configuration defaults.
+  - Provide a helpful `--help` output showing usage and environment variables.
+
+  REPL mode behavior:
+  - Run a loop where the user can enter multiple prompts and receive responses
+    without restarting the process.
+  - Support simple slash-style commands for meta actions (e.g., `/help`,
+    `/exit`, optionally `/backend` to switch backend preference during the
+    session).
+  - Print a startup banner indicating the active backend, how to exit, and how
+    to access help/commands.
+
+  File-level expectations:
+  - `web_search_agent/cli.py`:
+    - Implements CLI subcommands and REPL loop.
+    - Delegates to shared helper functions and the agent interface in
+      `web_search_agent/agent.py` (no duplicated business logic).
+  - `pyproject.toml`:
+    - Declares typer (or chosen CLI library) as a dependency.
+    - Defines a console script entry point for the CLI.
+
+  Testing notes:
+  - `tests/test_cli.py` should:
+    - Cover CLI argument parsing and subcommand dispatch (e.g., via typer's
+      testing utilities).
+    - Cover a happy-path single-command invocation (mocking agent calls).
+    - Cover a minimal REPL scenario (start, send one message, exit) using
+      mocks to avoid real network calls.
+
+  Scope:
+  - This task assumes the agent (TASK-005) is available and can be called via a
+    stable public interface.
+  - The spec pass should consider UX details similar to existing AI CLIs
+    (e.g., Claude Code) while keeping the implementation minimal and focused.
+tags:
+  - cli
+  - ux
+blockingTasks:
+  - TASK-001
+  - TASK-005

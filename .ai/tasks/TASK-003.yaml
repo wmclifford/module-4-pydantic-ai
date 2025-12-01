@@ -1,0 +1,87 @@
+schemaVersion: 1.0.0
+id: TASK-003
+taskTitle: Implement Brave Search tool
+status: pending
+rationale: >-
+  Implement a Brave Search web-search tool compatible with the Pydantic AI
+  agent, using the BRAVE_API_KEY environment variable and returning structured,
+  normalized search result models.
+links:
+  related:
+    - TASK-001
+    - TASK-002
+    - TASK-005
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/models.py
+    - web_search_agent/tools.py
+    - web_search_agent/tools/brave.py
+    - tests/test_tools_brave.py
+  commands:
+    - pytest tests/test_tools_brave.py
+  testsMustExist:
+    - tests/test_tools_brave.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Implement a Brave-specific search tool that can be invoked by the agent to
+    perform web searches via the Brave Search API, returning normalized
+    SearchResult/SearchResults models and handling API errors robustly.
+
+  Design expectations:
+  - Implement a Brave search function (or class) in `web_search_agent/tools.py`
+    or a dedicated module such as `web_search_agent/tools/brave.py`.
+  - The tool should be designed to integrate cleanly as a Pydantic AI tool
+    (e.g., using appropriate decorators or signatures per pydantic-ai
+    conventions).
+  - The tool reads configuration from the existing config layer
+    (AppConfig/BraveConfig), including BRAVE_API_KEY and any base URL or
+    default query parameters.
+  - The tool issues HTTP requests to the Brave Search API according to Brave's
+    documentation and parses responses into a normalized
+    SearchResult/SearchResults model defined in `web_search_agent/models.py`.
+  - Error conditions from Brave (4xx/5xx, timeouts, malformed responses) are
+    caught and converted into clear exceptions or error objects suitable for
+    consumption by the agent.
+  - Public entrypoints should be documented with docstrings and be stable
+    enough to be wired into the agent in TASK-005.
+
+  File-level expectations:
+  - `web_search_agent/models.py`:
+    - Define or extend SearchResult/SearchResults models to support fields
+      returned by Brave (e.g., title, url, snippet, maybe source/domain).
+  - `web_search_agent/tools.py` and/or `web_search_agent/tools/brave.py`:
+    - Contain Brave-specific logic, separated from other backends where
+      appropriate.
+  - `pyproject.toml` (indirectly via TASK-002/TASK-004):
+    - Ensure an HTTP client dependency (httpx or requests) is available.
+
+  Testing notes:
+  - `tests/test_tools_brave.py` should:
+    - Use HTTP mocking to verify correct request URLs, headers, and query
+      parameters.
+    - Verify correct parsing into SearchResult/SearchResults models for a
+      representative Brave response.
+    - Verify error handling for HTTP errors, timeouts, and malformed bodies.
+
+  Scope:
+  - This task relies on configuration models from TASK-002 and package layout
+    from TASK-001.
+  - It should not yet wire the Brave tool into the agent (that is done in
+    TASK-005) nor handle CLI or MCP invocation.
+tags:
+  - tools
+  - brave
+blockingTasks:
+  - TASK-001
+  - TASK-002

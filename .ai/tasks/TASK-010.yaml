@@ -1,0 +1,62 @@
+schemaVersion: 1.0.0
+id: TASK-010
+taskTitle: Update README for web-search agent, CLI, and MCP usage
+status: pending
+rationale: >-
+  Update the project README to describe the web-search agent, its
+  configuration, CLI usage, and MCP server usage, providing clear
+  getting-started instructions and examples.
+links:
+  related:
+    - TASK-002
+    - TASK-005
+    - TASK-006
+    - TASK-007
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - README.md
+  commands: [ ]
+  testsMustExist: [ ]
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Ensure README content clearly explains what the web-search agent does, how
+    to configure it via environment variables, how to run tests, how to use
+    the CLI, and how to start the MCP server, with examples.
+
+  Content expectations:
+  - Include a concise overview of the Pydantic AI web-search agent and
+    supported backends (Brave, SearXNG).
+  - Document environment variables with descriptions and reference to
+    `.env.example`.
+  - Provide instructions for:
+    - Setting up a development environment.
+    - Running tests with pytest.
+    - Running the CLI in single-command and REPL modes, with example commands.
+    - Starting the FastMCP server and invoking its tools (at least `web_search`).
+  - Reference docs/PLANNING.md and docs/TASKS.md for deeper architectural and
+    task details.
+
+  Scope:
+  - This task focuses on documentation clarity and completeness, not on
+    changing code.
+  - It should be performed after core agent, CLI, and MCP functionality is in
+    place so examples reflect reality.
+tags:
+  - docs
+  - readme
+blockingTasks:
+  - TASK-002
+  - TASK-005
+  - TASK-006
+  - TASK-007

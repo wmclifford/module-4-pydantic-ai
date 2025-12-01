@@ -1,0 +1,86 @@
+schemaVersion: 1.0.0
+id: TASK-004
+taskTitle: Implement SearXNG Search tool
+status: pending
+rationale: >-
+  Implement a SearXNG-based web-search tool compatible with the Pydantic AI
+  agent, using the SEARXNG_BASE_URL environment variable and returning
+  normalized search result models consistent with the Brave tool.
+links:
+  related:
+    - TASK-001
+    - TASK-002
+    - TASK-003
+    - TASK-005
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - web_search_agent/models.py
+    - web_search_agent/tools.py
+    - web_search_agent/tools/searxng.py
+    - tests/test_tools_searxng.py
+  commands:
+    - pytest tests/test_tools_searxng.py
+  testsMustExist:
+    - tests/test_tools_searxng.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Implement a SearXNG-specific search tool that can be invoked by the agent
+    to perform web searches via a configured SearXNG instance, returning
+    SearchResult/SearchResults models compatible with the Brave tool and
+    handling API errors robustly.
+
+  Design expectations:
+  - Implement a SearXNG search function (or class) in `web_search_agent/tools.py`
+    or a dedicated module such as `web_search_agent/tools/searxng.py`.
+  - The tool reads configuration from the existing config layer
+    (AppConfig/SearxngConfig), including SEARXNG_BASE_URL and any necessary
+    query parameters (e.g., categories, language).
+  - The tool issues HTTP GET requests with query parameters to the SearXNG
+    instance and parses responses into normalized SearchResult/SearchResults
+    models aligned with the Brave tool's models.
+  - Error conditions (4xx/5xx, timeouts, malformed responses) are caught and
+    surfaced as clear exceptions or error objects.
+  - The tool is documented (docstrings) and the public entrypoint is stable
+    enough to be wired into the agent in TASK-005.
+
+  File-level expectations:
+  - `web_search_agent/models.py`:
+    - Ensure SearchResult/SearchResults models support fields returned by
+      SearXNG in a backend-agnostic way, reusing the same structures as the
+      Brave tool where possible.
+  - `web_search_agent/tools.py` and/or `web_search_agent/tools/searxng.py`:
+    - Contain SearXNG-specific logic and keep it consistent with the Brave
+      implementation in terms of output structure.
+  - `pyproject.toml`:
+    - Confirm that the chosen HTTP client is suitable for both Brave and
+      SearXNG usage.
+
+  Testing notes:
+  - `tests/test_tools_searxng.py` should:
+    - Use HTTP mocking to verify correct request construction, including
+      parameters such as query, categories, and language.
+    - Verify parsing into SearchResult/SearchResults models.
+    - Verify error handling for HTTP errors, timeouts, and malformed responses.
+
+  Scope:
+  - This task builds on the SearchResult models and HTTP client choices from
+    TASK-003 so that tool outputs are consistent across backends.
+  - Wiring into the agent is completed in TASK-005.
+tags:
+  - tools
+  - searxng
+blockingTasks:
+  - TASK-001
+  - TASK-002
+  - TASK-003

@@ -1,0 +1,84 @@
+schemaVersion: 1.0.0
+id: TASK-008
+taskTitle: Add and organize pytest test suite
+status: pending
+rationale: >-
+  Set up and/or extend the pytest-based test suite for the web-search agent
+  project, ensuring coverage for configuration, tools, agent, CLI, and MCP
+  server according to docs/PLANNING.md.
+links:
+  related:
+    - TASK-002
+    - TASK-003
+    - TASK-004
+    - TASK-005
+    - TASK-006
+    - TASK-007
+  docs:
+    - docs/PLANNING.md
+    - docs/TASKS.md
+acceptance:
+  fileGlobs:
+    - tests/**
+    - pyproject.toml
+  commands:
+    - pytest
+  testsMustExist:
+    - tests/test_config.py
+    - tests/test_tools_brave.py
+    - tests/test_tools_searxng.py
+    - tests/test_agent.py
+    - tests/test_cli.py
+    - tests/test_mcp_server.py
+  minCoverage: 0.0
+evidence:
+  commit: ""
+  timestamp: null
+  branchName: null
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: |
+  Summary:
+  - Ensure a coherent pytest suite exists under `tests/` covering core modules
+    and entrypoints, with clear structure and basic coverage for happy paths,
+    edge cases, and failure modes.
+
+  Design expectations:
+  - The `tests/` directory should contain logical modules for:
+    - Configuration loading (`test_config.py`).
+    - Brave and SearXNG tools (`test_tools_brave.py`, `test_tools_searxng.py`).
+    - Agent behavior (`test_agent.py`).
+    - CLI behavior (`test_cli.py`).
+    - MCP server behavior (`test_mcp_server.py`).
+  - Tests should include at least one happy-path, one edge-case, and one
+    failure-mode test per major module where applicable.
+  - Tests should be runnable via `pytest` and pass on a fresh checkout after
+    following documented setup steps.
+  - Any necessary pytest configuration (e.g., in pyproject.toml or pytest.ini)
+    should be present and documented.
+
+  File-level expectations:
+  - `pyproject.toml`:
+    - Contains pytest configuration (test paths, options) aligned with the
+      project layout.
+  - Individual test files (`test_config.py`, `test_tools_brave.py`, etc.):
+    - May be extended or refined to meet coverage goals, reduce duplication,
+      and follow common fixtures/helpers.
+
+  Scope:
+  - This task pulls together and normalizes tests introduced by earlier tasks,
+    ensuring the suite is cohesive and aligned with the patterns described in
+    docs/PLANNING.md.
+  - It may involve small refactors of test helpers or fixtures to reduce
+    duplication.
+tags:
+  - tests
+  - quality
+blockingTasks:
+  - TASK-002
+  - TASK-003
+  - TASK-004
+  - TASK-005
+  - TASK-006
+  - TASK-007
