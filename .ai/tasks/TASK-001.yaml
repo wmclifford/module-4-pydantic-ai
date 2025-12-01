@@ -1,7 +1,7 @@
 schemaVersion: 1.0.0
 id: TASK-001
 taskTitle: Design and scaffold web_search_agent package layout
-status: pending
+status: in_progress
 rationale: >-
   Create the initial Python package structure for the Pydantic AI web-search
   agent so that later tasks can focus on configuration, tools, agent logic, MCP
@@ -25,7 +25,7 @@ acceptance:
 evidence:
   commit: ""
   timestamp: null
-  branchName: null
+  branchName: feat/TASK-001-web-search-agent-layout
   testSummary: null
   ciRunUrl: ""
   prUrl: ""
