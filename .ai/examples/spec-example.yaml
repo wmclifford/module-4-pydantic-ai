@@ -1,0 +1,21 @@
+task_id: "EXAMPLE-001"
+author: "Principal Architect"
+created_at: "2025-11-30T10:00:00Z"
+acceptance_criteria: "Add a new configuration file and update the README to document it"
+branch_plan:
+  branch_name_pattern: "feat/EXAMPLE-001-add-config"
+  initial_branch_name: "feat/EXAMPLE-001-add-config"
+  first_commit_file: ".ai/tasks/EXAMPLE-001.yaml"
+  first_commit_message: "chore(artifacts): start task branch and add spec artifacts"
+planned_diffs:
+  - file: "config/new-config.yaml"
+    change: "add"
+    description: "Add new configuration file"
+    marker: "new file"
+    justification: "Required by acceptance criteria to add new configuration"
+  - file: "README.md"
+    change: "modify"
+    description: "Update README with configuration documentation"
+    marker: "## Configuration"
+    justification: "Required by acceptance criteria to document new configuration"
+

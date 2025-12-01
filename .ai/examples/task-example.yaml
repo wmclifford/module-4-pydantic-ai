@@ -1,0 +1,31 @@
+schemaVersion: "0.1.0"
+id: "EXM-001"
+taskTitle: "Add new configuration file and update documentation"
+status: "pending"
+rationale: "The project needs a new configuration file to support additional features. Documentation should be updated to reflect this new configuration option."
+links:
+  related: [ ]
+  docs: [ ]
+acceptance:
+  fileGlobs:
+    - "config/*.yaml"
+    - "README.md"
+  commands:
+    - "pytest tests/"
+    - "black --check ."
+    - "ruff check ."
+  testsMustExist: [ ]
+  minCoverage: 0.8
+evidence:
+  commit: ""
+  branchName: ""
+  timestamp: ""
+  testSummary: null
+  ciRunUrl: ""
+  prUrl: ""
+notes: [ ]
+tags:
+  - "configuration"
+  - "documentation"
+blockingTasks: [ ]
+
