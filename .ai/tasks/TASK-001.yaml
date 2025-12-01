@@ -41,7 +41,7 @@ evidence:
       lines: 0.0
       branches: 0.0
   ciRunUrl: ""
-  prUrl: ""
+  prUrl: "https://github.com/wmclifford/module-4-pydantic-ai/pull/1"
 notes: |
   - The `web_search_agent` package must exist and be importable.
   - Create the following modules with high-level docstrings describing their
@@ -70,4 +70,3 @@ tags:
   - scaffolding
   - layout
 blockingTasks: [ ]
-
