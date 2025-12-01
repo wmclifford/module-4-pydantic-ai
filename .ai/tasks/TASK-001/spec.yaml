@@ -1,0 +1,75 @@
+task_id: TASK-001
+author: "GitHub Copilot"
+created_at: "2025-12-01T00:00:00Z"
+acceptance_criteria: |
+  - The web_search_agent package must exist and be importable.
+  - Modules config.py, models.py, tools.py, agent.py, mcp_server.py, cli.py must exist with high-level docstrings only.
+  - CLI stub must print help/version info when run via main.py.
+  - tests/test_package_layout.py must verify importability of all modules using a pytest class.
+  - README.md must mention the new package and include CLI usage instructions.
+branch_plan:
+  branch_name_pattern: "<type>/<TASK-ID>-<slug>"
+  initial_branch_name: "feat/TASK-001-web-search-agent-layout"
+  first_commit_files:
+    - .ai/tasks/TASK-001.yaml
+    - .ai/tasks/TASK-001/spec.yaml
+    - .ai/tasks/TASK-001/planned-diffs.md
+  first_commit_message: |
+    chore(artifacts): start task branch and add spec artifacts
+    
+    Refs: TASK-001
+planned_diffs:
+  - file: web_search_agent/__init__.py
+    change: add
+    marker: N/A
+    description: Create package init file for importability.
+    justification: Ensures Python recognizes web_search_agent as a package and allows import in tests and CLI.
+  - file: web_search_agent/config.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for configuration loading and placeholder Pydantic models.
+    justification: Prepares for future config logic and documents intended use.
+  - file: web_search_agent/models.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for search result data models.
+    justification: Prepares for future model logic and documents intended use.
+  - file: web_search_agent/tools.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for Brave/SearXNG tool implementations.
+    justification: Prepares for future tool logic and documents intended use.
+  - file: web_search_agent/agent.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for Pydantic AI agent definition.
+    justification: Prepares for future agent logic and documents intended use.
+  - file: web_search_agent/mcp_server.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for FastMCP server wiring.
+    justification: Prepares for future server logic and documents intended use.
+  - file: web_search_agent/cli.py
+    change: add
+    marker: top of file
+    description: Add high-level docstring for CLI entrypoints and stub to print help/version info.
+    justification: Enables CLI invocation and documents intended use.
+  - file: main.py
+    change: add
+    marker: top of file
+    description: Wire CLI stub to print help/version info when run as a script.
+    justification: Allows users to invoke CLI from main.py and see help/version output.
+  - file: tests/test_package_layout.py
+    change: add
+    marker: top of file
+    description: Add pytest class to verify importability of package and modules.
+    justification: Ensures all modules are importable and ready for development.
+  - file: README.md
+    change: modify
+    marker: "CLI Usage section"
+    description: Update README.md to mention new package and CLI stub, including usage instructions.
+    justification: Documents new package and CLI usage for users and developers.
+questions: |
+  - Should CLI stub be wired via main.py, a console script, or both? (Operator: main.py)
+  - Preferred structure for test file? (Operator: pytest class)
+  - Should README.md include usage instructions for CLI stub? (Operator: yes)

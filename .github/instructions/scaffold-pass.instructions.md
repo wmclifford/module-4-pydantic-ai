@@ -26,7 +26,7 @@ notes in `.ai/tasks/{{ task_id }}/scaffold-notes.md` when appropriate.
   `.ai/tools/validate_yaml.py` to perform the validation.
 - Do not attempt to guess unclear modifications: record questions and add TODO markers in files where human
   clarification is required.
-- Always apply diffs in the order listed in `planned_diffs`.
+- Always apply diffs in the order listed in `planned_diffs` in the spec artifact.
 - **Commit each applied diff separately** using the Conventional Commits format; see the
   [commit instructions](../git-commit-instructions.md) for details. Commit `type` is based on the action:
     - `add` -> `feat` (new functionality) or `docs` if only updating documentation

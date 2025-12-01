@@ -11,3 +11,8 @@ members = [
     "RAG_Pipeline",
     ".ai/tools",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.1",
+]
