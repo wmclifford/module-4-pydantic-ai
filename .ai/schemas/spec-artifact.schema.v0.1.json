@@ -104,11 +104,19 @@
     },
     "questions": {
       "description": "List of questions to ask the operator during the spec pass",
-      "type": "array",
-      "items": {
-        "description": "Question to ask the operator",
-        "type": "string"
-      }
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "description": "Question to ask the operator",
+            "type": "string"
+          }
+        },
+        {
+          "description": "One or more questions to ask the operator, separated by line breaks (multi-line string)",
+          "type": "string"
+        }
+      ]
     }
   },
   "additionalProperties": false
