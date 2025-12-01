@@ -25,9 +25,10 @@ best practices are followed and decisions are made with the best possible unders
 - When the operator approves the plan, the agent will create a new branch for the task using the project's branch
   naming convention and will:
     - Create the branch with the pattern: `<type>/{{ task_id }}-<slug>` (e.g., `feat/SEC-001-add-jwt`).
-    - Note: `type` is usually `feat`, `bugfix`, or `chore` depending on the task. Branch names MUST NOT contain
-      multiple slashes—use only the single slash between `type` and the rest of the name. Use a hyphen (`-`) to
-      separate the task ID and the slug.
+    - Valid `type` values: `feat` (new feature), `bugfix` (bug fixes), `chore` (maintenance),
+      `refactor` (code restructuring), `docs` (documentation), `test` (testing-related changes).
+    - Branch names MUST NOT contain multiple slashes—use only the single slash between `type` and the rest of the name.
+      Use a hyphen (`-`) to separate the task ID and the slug.
     - Update the task file status to `in_progress` and commit that file as the FIRST commit on the new branch (include
       a short note like "spec pass: branch created").
     - Also add the generated spec artifacts under `.ai/tasks/{{ task_id }}/` to that FIRST commit so that the repo

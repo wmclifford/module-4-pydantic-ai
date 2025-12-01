@@ -38,7 +38,11 @@ task-specific stabilization notes in `.ai/tasks/{{ task_id }}/stabilize-notes.md
       automation and used to populate task evidence).
     - `stabilize-report.md` - human-friendly markdown summary with key details, commands run, and unresolved questions.
 - Validate `.ai/tasks/{{ task_id }}/stabilize.yaml` against `.ai/schemas/stabilize-artifact.schema.v0.1.json` before
-  committing. Use `.ai/tools/validate_yaml.py` to perform the validation. If validation fails, present errors and stop.
+  committing. Use `.ai/tools/validate_yaml.py` to perform the validation. If validation fails:
+    1. Present the exact validation errors to the operator
+    2. Do not commit the invalid YAML
+    3. Document the validation issues in `.ai/tasks/{{ task_id }}/stabilize-notes.md
+    4. Request directions from the operator on how to proceed
 
 **Test Summary / Evidence Format:**
 
@@ -91,7 +95,7 @@ task-specific stabilization notes in `.ai/tasks/{{ task_id }}/stabilize-notes.md
 **Operational Notes/Safety:**
 
 - This instruction file complements `.github/prompts/stabilize-pass.prompts.md` and provides higher-level guidance
-  for the scaffold pass that can be reused across tasks.
+  for the stabilization pass that can be reused across tasks.
 - If stabilization requires infrastructure changes, secrets, or modifications outside the allowed files, stop and
   request operator guidance.
 - Keep stabilization notes in `.ai/tasks/{{ task_id }}/stabilize-notes.md` for auditing and future reference.

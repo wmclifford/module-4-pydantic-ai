@@ -38,8 +38,11 @@ notes in `.ai/tasks/{{ task_id }}/scaffold-notes.md` when appropriate.
     - `scaffold-report.md` - human-friendly summary with applied diffs, small unified-diff sketches (if helpful),
       unresolved questions, and timestamps
 - Validate the generated `scaffold.yaml` against `.ai/schemas/scaffold-artifact.schema.v0.1.json` before committing
-  it. Use `.ai/tools/validate_yaml.py` to perform the validation. If validation fails, present the errors, do not
-  commit, and request directions from the operator.
+  it. Use `.ai/tools/validate_yaml.py` to perform the validation. If validation fails:
+    1. Present the exact validation errors to the operator
+    2. Do not commit the invalid YAML
+    3. Document the validation issues in `.ai/tasks/{{ task_id }}/scaffold-notes.md`
+    4. Request directions from the operator on how to proceed
 - Wait for operator approval before continuing with the "stabilize" pass.
 
 **Operational Notes:**
