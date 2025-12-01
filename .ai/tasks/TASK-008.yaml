@@ -1,4 +1,4 @@
-schemaVersion: 1.0.0
+schemaVersion: 0.1.0
 id: TASK-008
 taskTitle: Add and organize pytest test suite
 status: pending

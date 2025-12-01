@@ -1,4 +1,4 @@
-schemaVersion: 1.0.0
+schemaVersion: 0.1.0
 id: TASK-001
 taskTitle: Design and scaffold web_search_agent package layout
 status: done

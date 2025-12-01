@@ -1,4 +1,4 @@
-schemaVersion: 1.0.0
+schemaVersion: 0.1.0
 id: TASK-011
 taskTitle: Align documentation with 3-pass plan workflow
 status: pending

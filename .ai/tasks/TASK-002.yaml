@@ -1,4 +1,4 @@
-schemaVersion: 1.0.0
+schemaVersion: 0.1.0
 id: TASK-002
 taskTitle: Implement configuration, env management, and initial CI workflow
 status: pending

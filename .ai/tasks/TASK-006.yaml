@@ -1,4 +1,4 @@
-schemaVersion: 1.0.0
+schemaVersion: 0.1.0
 id: TASK-006
 taskTitle: Implement modern CLI interface (single-command and REPL)
 status: pending
