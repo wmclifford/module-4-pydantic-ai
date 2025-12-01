@@ -36,6 +36,8 @@ task-specific stabilization notes in `.ai/tasks/{{ task_id }}/stabilize-notes.md
 
 **Artifact and Validation Rules:**
 
+- Read the Stabilize artifact schema (`.ai/schemas/stabilize-artifact.schema.v0.1.json`) before producing stabilize
+  artifacts.
 - The Stabilize pass MUST produce two artifacts under `.ai/tasks/{{ task_id }}/`:
     - `stabilize.yaml` - canonical machine-readable artifact describing the stabilization outcome (consumed by
       automation and used to populate task evidence).

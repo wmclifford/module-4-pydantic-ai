@@ -19,9 +19,11 @@ best practices are followed and decisions are made with the best possible unders
 **Rules:**
 
 - Read the governing documents (`docs/PLANNING.md` and `docs/TASKS.md`) before processing the task.
+- Read the Spec artifact schema (`.ai/schemas/spec-artifact.schema.v0.1.json`) before producing spec artifacts.
 - If the operator does not provide the task ID, always ask for it; do not assume one.
 - Produce only the planned diffs; do not edit any files in this pass (writing artifacts under `.ai/tasks/{{ task_id }}/`
   is allowed when the prompt header flag `write_spec_artifact: true` is set).
+- Stop once the spec artifacts are written; wait for the operator to approve the plan.
 - When the operator approves the plan, the agent will create a new branch for the task using the project's branch
   naming convention and will:
     - Create the branch with the pattern: `<type>/{{ task_id }}-<slug>` (e.g., `feat/SEC-001-add-jwt`).

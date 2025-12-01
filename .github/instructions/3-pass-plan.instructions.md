@@ -116,12 +116,13 @@ consume.
 1. On `main`, run the Spec prompt and:
     - read `docs/PLANNING.md` and `docs/TASKS.md`,
     - read the task file `.ai/tasks/{{ task_id }}.yaml`,
+    - read the spec artifact schema file `.ai/schemas/spec-artifact.schema.v0.1.json`,
     - propose and refine `planned_diffs` with the operator.
 2. Still on `main`, write (uncommitted) artifacts:
     - `.ai/tasks/{{ task_id }}/spec.yaml`
     - `.ai/tasks/{{ task_id }}/planned-diffs.md`
-3. The operator reviews these artifacts and the chat output. If changes are needed, update and rewrite the artifacts on
-   `main` (still uncommitted).
+3. The operator reviews these artifacts and the chat output. **Wait for the operator before continuing.** If changes are
+   needed, update and rewrite the artifacts on `main` (still uncommitted).
 4. Once the operator explicitly approves the spec:
     - create the task branch: `<type>/{{ task_id }}-{{ slug }}` (for example, `feat/CFG-001-add-config`),
     - on the new branch, update `.ai/tasks/{{ task_id }}.yaml` to set `status: in_progress` and optionally record
@@ -201,7 +202,7 @@ consume.
 ### Spec (Plan)
 
 - Run the Spec prompt with the Spec instructions loaded. Provide `.ai/tasks/CFG-001.yaml` when asked.
-- Review the proposed diffs in the chat; approve or request changes.
+- Review the proposed diffs in the chat; operator will approve or request changes.
 - Branch: `feat/CFG-001-add-config`
 - The first commit includes:
     - `.ai/tasks/CFG-001.yaml` status updated to `in_progress`; optionally update branch name and timestamp.

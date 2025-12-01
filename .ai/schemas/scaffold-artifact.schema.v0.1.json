@@ -13,19 +13,24 @@
   ],
   "properties": {
     "task_id": {
+      "description": "Task ID, e.g., \"TASK-001\". Must match the task ID in the prompt header.",
       "type": "string"
     },
     "author": {
+      "description": "Name of the operator who initiated the task",
       "type": "string"
     },
     "created_at": {
+      "description": "Timestamp when the scaffold artifact was created",
       "type": "string",
       "format": "date-time"
     },
     "spec_reference": {
+      "description": "Reference to the spec artifact used for this scaffolding pass",
       "type": "string"
     },
     "applied_diffs": {
+      "description": "List of applied diffs",
       "type": "array",
       "items": {
         "type": "object",
@@ -37,9 +42,11 @@
         ],
         "properties": {
           "file": {
+            "description": "Path to the file relative to the project root directory",
             "type": "string"
           },
           "action": {
+            "description": "Change type: one of \"add\", \"modify\", \"delete\", or \"rename\"",
             "type": "string",
             "enum": [
               "add",
@@ -49,24 +56,30 @@
             ]
           },
           "commit_sha": {
+            "description": "SHA of the commit that applied the change",
             "type": "string"
           },
           "commit_message": {
+            "description": "Commit message of the change",
             "type": "string"
           },
           "notes": {
+            "description": "Additional notes about the applied diff",
             "type": "string"
           }
         }
       }
     },
     "unresolved_questions": {
+      "description": "List of questions that were not answered during the scaffold pass",
       "type": "array",
       "items": {
+        "description": "Question that was not answered during the scaffold pass",
         "type": "string"
       }
     },
     "version": {
+      "description": "Version of the scaffolding pass",
       "type": "string"
     }
   },

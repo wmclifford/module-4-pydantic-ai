@@ -14,37 +14,49 @@
   ],
   "properties": {
     "task_id": {
+      "description": "Task ID, e.g., \"TASK-001\". Must match the task ID in the prompt header.",
       "type": "string"
     },
     "author": {
+      "description": "Name of the operator who initiated the task",
       "type": "string"
     },
     "created_at": {
+      "description": "Timestamp when the spec artifact was created",
       "type": "string",
       "format": "date-time"
     },
     "acceptance_criteria": {
+      "description": "List of acceptance criteria for the task",
       "type": "string"
     },
     "branch_plan": {
+      "description": "Branch plan for the task",
       "type": "object",
       "required": [
         "branch_name_pattern",
         "initial_branch_name",
-        "first_commit_file",
+        "first_commit_files",
         "first_commit_message"
       ],
       "properties": {
         "branch_name_pattern": {
+          "description": "Pattern for the task branch name",
           "type": "string"
         },
         "initial_branch_name": {
+          "description": "Name of the initial branch for the task",
           "type": "string"
         },
-        "first_commit_file": {
-          "type": "string"
+        "first_commit_files": {
+          "description": "List of files to commit in the first commit of the task branch",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "first_commit_message": {
+          "description": "Commit message for the first commit of the task branch",
           "type": "string"
         }
       }
@@ -62,9 +74,11 @@
         ],
         "properties": {
           "file": {
+            "description": "Path to the file relative to the project root directory",
             "type": "string"
           },
           "change": {
+            "description": "Change type: one of \"add\", \"modify\", \"delete\", or \"rename\"",
             "type": "string",
             "enum": [
               "add",
@@ -74,20 +88,25 @@
             ]
           },
           "marker": {
+            "description": "Marker indicating where the change should be made relative to the file content",
             "type": "string"
           },
           "description": {
+            "description": "Short description of the change",
             "type": "string"
           },
           "justification": {
+            "description": "Detailed explanation of why the change is needed",
             "type": "string"
           }
         }
       }
     },
     "questions": {
+      "description": "List of questions to ask the operator during the spec pass",
       "type": "array",
       "items": {
+        "description": "Question to ask the operator",
         "type": "string"
       }
     }

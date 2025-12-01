@@ -19,7 +19,8 @@ notes in `.ai/tasks/{{ task_id }}/scaffold-notes.md` when appropriate.
 
 **Rules:**
 
-- Read the governing docs and the `spec-artifact` schema before applying changes.
+- Read the governing documents (`docs/PLANNING.md` and `docs/TASKS.md`) and the `spec-artifact` schema (
+  `.ai/schemas/scaffold-artifact.schema.v0.1.json`) before applying changes.
 - The scaffold pass must validate the spec artifact at `.ai/tasks/{{ task_id }}/spec.yaml` against
   `.ai/schemas/spec-artifact.schema.v0.1.json` and fail fast if validation errors exist. Use
   `.ai/tools/validate_yaml.py` to perform the validation.
