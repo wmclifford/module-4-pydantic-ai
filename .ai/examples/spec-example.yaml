@@ -1,13 +1,13 @@
-task_id: "EXAMPLE-001"
+taskId: "EXAMPLE-001"
 author: "Principal Architect"
-created_at: "2025-11-30T10:00:00Z"
-acceptance_criteria: "Add a new configuration file and update the README to document it"
-branch_plan:
-  branch_name_pattern: "feat/EXAMPLE-001-add-config"
-  initial_branch_name: "feat/EXAMPLE-001-add-config"
-  first_commit_file: ".ai/tasks/EXAMPLE-001.yaml"
-  first_commit_message: "chore(artifacts): start task branch and add spec artifacts"
-planned_diffs:
+createdAt: "2025-11-30T10:00:00Z"
+acceptanceCriteria: "Add a new configuration file and update the README to document it"
+branchPlan:
+  branchNamePattern: "feat/EXAMPLE-001-add-config"
+  initialBranchName: "feat/EXAMPLE-001-add-config"
+  firstCommitFile: ".ai/tasks/EXAMPLE-001.yaml"
+  firstCommitMessage: "chore(artifacts): start task branch and add spec artifacts"
+plannedDiffs:
   - file: "config/new-config.yaml"
     change: "add"
     description: "Add new configuration file"

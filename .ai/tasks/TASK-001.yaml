@@ -27,19 +27,19 @@ evidence:
   timestamp: "2025-12-01T17:20:02Z"
   branchName: feat/TASK-001-web-search-agent-layout
   testSummary:
-    unit_tests:
-      total: 7
-      passed: 7
+    test:
+      tests: 7
+      errors: 0
       failed: 0
       skipped: 0
-    integration_tests:
-      total: 0
-      passed: 0
+    integrationTest:
+      tests: 0
+      errors: 0
       failed: 0
       skipped: 0
     coverage:
-      lines: 0.0
-      branches: 0.0
+      line: 0.0
+      branch: 0.0
   ciRunUrl: ""
   prUrl: "https://github.com/wmclifford/module-4-pydantic-ai/pull/1"
 notes: |

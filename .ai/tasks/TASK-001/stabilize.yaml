@@ -1,8 +1,8 @@
-task_id: TASK-001
+taskId: TASK-001
 author: "GitHub Copilot"
-created_at: "2025-12-01T00:00:00Z"
-spec_reference: ".ai/tasks/TASK-001/spec.yaml"
-applied_commits:
+createdAt: "2025-12-01T00:00:00Z"
+specReference: ".ai/tasks/TASK-001/spec.yaml"
+appliedCommits:
   - "61013500843cd72142fb1c5444207de58e3ab8c3"
   - "0b7448a7d569e3a62be58e2d48f70e07429da534"
   - "b3fe71d4a6cd6da9111e8b2c9a016a74fa0cd467"
@@ -17,12 +17,12 @@ applied_commits:
   - "06b6e6bdc4034aa1cf5fa01f89a5c19e85788759"
   - "d7b828095bca3c6c3a5c0d4dad4e1731f4251e32"
 testSummary:
-  unit_tests:
+  unitTests:
     total: 7
     passed: 7
     failed: 0
     skipped: 0
-  integration_tests:
+  integrationTests:
     total: 0
     passed: 0
     failed: 0

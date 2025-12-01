@@ -195,18 +195,22 @@
                   ],
                   "properties": {
                     "errors": {
+                      "description": "Number of test failures due to assertion errors.",
                       "type": "integer",
                       "minimum": 0
                     },
                     "failed": {
+                      "description": "Number of test failures (including assertion errors).",
                       "type": "integer",
                       "minimum": 0
                     },
                     "skipped": {
+                      "description": "Number of skipped tests.",
                       "type": "integer",
                       "minimum": 0
                     },
                     "tests": {
+                      "description": "Total number of tests run.",
                       "type": "integer",
                       "minimum": 0
                     }
@@ -222,25 +226,29 @@
                   ],
                   "properties": {
                     "errors": {
+                      "description": "Number of integration test failures due to assertion errors.",
                       "type": "integer",
                       "minimum": 0
                     },
                     "failed": {
+                      "description": "Number of integration test failures (including assertion errors).",
                       "type": "integer",
                       "minimum": 0
                     },
                     "skipped": {
+                      "description": "Number of skipped integration tests.",
                       "type": "integer",
                       "minimum": 0
                     },
                     "tests": {
+                      "description": "Total number of integration tests run.",
                       "type": "integer",
                       "minimum": 0
                     }
                   },
                   "additionalProperties": false
                 },
-                "jacocoTestReport": {
+                "coverage": {
                   "type": "object",
                   "description": "Summary of JaCoCo test coverage report.",
                   "required": [

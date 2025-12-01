@@ -1,84 +1,84 @@
-task_id: TASK-001
+taskId: TASK-001
 author: "GitHub Copilot"
-created_at: "2025-12-01T00:00:00Z"
-spec_reference: ".ai/tasks/TASK-001/spec.yaml"
-applied_diffs:
+createdAt: "2025-12-01T00:00:00Z"
+specReference: ".ai/tasks/TASK-001/spec.yaml"
+appliedDiffs:
   - file: web_search_agent/__init__.py
     action: add
-    commit_sha: "61013500843cd72142fb1c5444207de58e3ab8c3"
-    commit_message: |
+    commitSha: "61013500843cd72142fb1c5444207de58e3ab8c3"
+    commitMessage: |
       feat(web_search_agent): create package init file for importability
       
       Refs: TASK-001
     description: Create package init file for importability.
   - file: web_search_agent/config.py
     action: add
-    commit_sha: "0b7448a7d569e3a62be58e2d48f70e07429da534"
-    commit_message: |
+    commitSha: "0b7448a7d569e3a62be58e2d48f70e07429da534"
+    commitMessage: |
       feat(web_search_agent): add config module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for configuration loading and placeholder Pydantic models.
   - file: web_search_agent/models.py
     action: add
-    commit_sha: "b3fe71d4a6cd6da9111e8b2c9a016a74fa0cd467"
-    commit_message: |
+    commitSha: "b3fe71d4a6cd6da9111e8b2c9a016a74fa0cd467"
+    commitMessage: |
       feat(web_search_agent): add models module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for search result data models.
   - file: web_search_agent/tools.py
     action: add
-    commit_sha: "1c0f3de4e10a7e278d522376c2d1e326d59aca68"
-    commit_message: |
+    commitSha: "1c0f3de4e10a7e278d522376c2d1e326d59aca68"
+    commitMessage: |
       feat(web_search_agent): add tools module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for Brave/SearXNG tool implementations.
   - file: web_search_agent/agent.py
     action: add
-    commit_sha: "c28abdeac81ebc9ad9b8d04859099d49e8cbf989"
-    commit_message: |
+    commitSha: "c28abdeac81ebc9ad9b8d04859099d49e8cbf989"
+    commitMessage: |
       feat(web_search_agent): add agent module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for Pydantic AI agent definition.
   - file: web_search_agent/mcp_server.py
     action: add
-    commit_sha: "d9b6efaf4e3b5e79fb0189264a51e6a3c18286b4"
-    commit_message: |
+    commitSha: "d9b6efaf4e3b5e79fb0189264a51e6a3c18286b4"
+    commitMessage: |
       feat(web_search_agent): add mcp_server module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for FastMCP server wiring.
   - file: web_search_agent/cli.py
     action: add
-    commit_sha: "4f580612adb8cd771e3138b76d1107f12daec957"
-    commit_message: |
+    commitSha: "4f580612adb8cd771e3138b76d1107f12daec957"
+    commitMessage: |
       feat(web_search_agent): add cli module with high-level docstring
       
       Refs: TASK-001
     description: Add high-level docstring for CLI entrypoints and stub to print help/version info.
   - file: main.py
     action: modify
-    commit_sha: "87c1145c0c167ee1679b12a8fa48ac919a29ae7a"
-    commit_message: |
+    commitSha: "87c1145c0c167ee1679b12a8fa48ac919a29ae7a"
+    commitMessage: |
       feat(cli): wire CLI stub to print help/version info
       
       Refs: TASK-001
     description: Wire CLI stub to print help/version info when run as a script.
   - file: tests/test_package_layout.py
     action: add
-    commit_sha: "4eb3d01a7252ef2edc69721962545a8d1cb93e14"
-    commit_message: |
+    commitSha: "4eb3d01a7252ef2edc69721962545a8d1cb93e14"
+    commitMessage: |
       test(web_search_agent): add test_package_layout.py to verify importability
       
       Refs: TASK-001
     description: Add pytest class to verify importability of package and modules.
   - file: README.md
     action: modify
-    commit_sha: "a01f6981cf0d607138c6b092d089a29621fe0dc4"
-    commit_message: |
+    commitSha: "a01f6981cf0d607138c6b092d089a29621fe0dc4"
+    commitMessage: |
       docs(readme): update README.md to mention new package and CLI usage
       
       Refs: TASK-001
