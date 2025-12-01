@@ -16,11 +16,11 @@ project:
 
 ### Project Awareness and Context
 
-- **Always read `PLANNING.md`** at the start of a new conversation to understand the project's architecture, goals,
+- **Always read `docs/PLANNING.md`** at the start of a new conversation to understand the project's architecture, goals,
   style, and constraints.
-- **Check `TASK.md`** before starting a new task. If the task is not listed, add it with a brief description and
+- **Check `docs/TASKS.md`** before starting a new task. If the task is not listed, add it with a brief description and
   today's date.
-- **Use consistent naming conventions, file structure, and architecture patterns** as described in `PLANNING.md`.
+- **Use consistent naming conventions, file structure, and architecture patterns** as described in `docs/PLANNING.md`.
 
 ### Releases & Publishing
 
@@ -43,13 +43,13 @@ project:
 
 ### Testing and Reliability
 
-- **Always create Pytest unit tests for new features** (functions, classes, routes, etc).
+- **Always create Pytest unit tests for new features** (functions, classes, routes, etc.).
 - **After updating any logic**, check whether existing unit tests need to be updated. If so, update them.
 - **Tests should live in a `/tests` folder** mirroring the main app structure.
     - Include at least:
         - 1 test for expected use (the "happy path")
-        - 1 test for edge cases (invalid inputs, unexpected errors, etc)
-        - 1 test for failure conditions (invalid API responses, etc)
+        - 1 test for edge cases (invalid inputs, unexpected errors, etc.)
+        - 1 test for failure conditions (invalid API responses, etc.)
 - Always test the individual functions for agent tools.
 
 Where possible, try to follow the [Test-Driven Development](https://en.wikipedia.org/wiki/Test-driven_development)
@@ -64,6 +64,7 @@ process, though they are not presently planned.
 - **Use `pydantic` for data validation**.
 - Write **docstrings for every function** using the Google style:
     ```python
+
     def example_function(param1: int, param2: str) -> bool:
         """Short description of the function.
 
@@ -75,6 +76,7 @@ process, though they are not presently planned.
             bool: Description of the return value.
         """
         pass
+
     ```
 
 ### Formatting
@@ -97,7 +99,7 @@ process, though they are not presently planned.
 
 - **Never assume missing context. Ask questions if uncertain.**
 - **Always confirm file paths and module names** exist before using them.
-- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
+- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `docs/TASKS.md`.
 
 ---
 
@@ -121,7 +123,7 @@ Instructions for formatting commit messages can be found [here](git-commit-instr
 ### Two-commit Evidence Ritual
 
 1. CODE commit implements the task.
-2. EVIDENCE commit updates the task file (`Tasks/<TASK-ID>.yaml`) with `evidence.commit` = 40-char commit hash.
+2. EVIDENCE commit updates the task file (`.ai/tasks/<TASK-ID>.yaml`) with `evidence.commit` = 40-char commit hash.
 
 Note: The task file schema supports optional `evidence.timestamp` (ISO-8601) and `evidence.branchName` (the branch used
 for the task). Populate these where helpful.
@@ -155,11 +157,13 @@ for the task). Populate these where helpful.
   last commit on the branch, just before PR is opened.
 - **`done`:** task branch has been merged to `main`; the task file must be updated with `status` = `done` and
   the `evidence.commit` must be updated to the squash commit of the PR; commit this directly to `main`.
+- The `done` transition is handled by the post-merge ritual described in
+  `.github/instructions/3-pass-plan.instructions.md`.
 
 ### Task Completion
 
-- **Mark completed tasks in `TASK.md`** immediately after they are completed.
-- Add new subtasks or TODOs discovered during development to `TASK.md` under a "Discovered During Work" section.
+- **Mark completed tasks in `docs/TASKS.md`** immediately after they are completed.
+- Add new subtasks or TODOs discovered during development to `docs/TASKS.md` under a "Discovered During Work" section.
 
 ### Evidence & Audit
 
@@ -188,4 +192,4 @@ for the task). Populate these where helpful.
 ## Deviations
 
 - Any deviation must include a short ADR entry with rationale and consequences, rollback plan, and approval
-  signature (owner-driven by default).
+  signature (owner-driven by default). See `docs/ADR.md` for the ADR format and process.

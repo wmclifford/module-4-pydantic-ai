@@ -49,7 +49,7 @@ commit the task file, and open a Pull Request for review.
     - Unit tests (only if `acceptance.commands` indicate tests are expected)
     - Integration tests (only if `acceptance.commands` indicate tests are expected)
     - Any configured quality gates (e.g., coverage thresholds)
-6. If checks fail, attempt iterative fixes up to 3 quick iterations:
+6. If checks fail, attempt iterative fixes up to **three** quick iterations:
     - For each iteration: fix the smallest set of issues that addresses the failures (tests, flaky tests, config), run
       the failing checks, and commit the fix using a Conventional Commit message. The `type` of commit should be one of
       `fix`, `refactor`, or `chore`, depending on the nature of the fix.

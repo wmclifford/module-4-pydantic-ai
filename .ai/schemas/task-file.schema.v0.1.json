@@ -122,15 +122,26 @@
           "description": "Git SHA (40 hex chars) or empty until filled by the agent.",
           "anyOf": [
             {
+              "description": "Empty string allowed for incomplete tasks.",
               "type": "null"
             },
             {
+              "description": "Single commit allowed.",
               "type": "string",
               "pattern": "^[0-9a-f]{40}$"
             },
             {
+              "description": "Empty string allowed for incomplete tasks.",
               "type": "string",
               "maxLength": 0
+            },
+            {
+              "description": "Multiple commits allowed.",
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
             }
           ]
         },

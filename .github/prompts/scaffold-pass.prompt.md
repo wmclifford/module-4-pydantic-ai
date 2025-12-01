@@ -28,6 +28,8 @@ report documenting the applied diffs and commit SHAs.
   already on the task branch, stop and request the branch name.
 - All commits created by the scaffold pass MUST follow the Conventional Commits format as described in
   [the commit instructions](../git-commit-instructions.md).
+- When attempting to resolve ambiguous markers or locations for `modify` diffs, make at most 3 targeted attempts before
+  falling back to a TODO marker and recording a QUESTION in the scaffold report.
 
 ## Instructions (execute in order)
 
@@ -45,6 +47,8 @@ report documenting the applied diffs and commit SHAs.
 - If `change` == `modify`: locate the `marker` in the target file. If the marker is clear, apply the modification
   inline. If the marker is ambiguous or missing, do NOT guess; instead add a TODO marker in the file and record a
   question in the report.
+    - Limit yourself to at most three targeted attempts to locate a suitable marker or region; after that, insert a TODO
+      marker and record a QUESTION instead of guessing.
 - If `change` == `delete`: remove the file.
 - If `change` == `rename`: rename the file as specified (include both old and new paths in the spec's `file` field;
   if missing, record a question and skip).

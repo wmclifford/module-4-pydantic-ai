@@ -24,8 +24,11 @@ task-specific stabilization notes in `.ai/tasks/{{ task_id }}/stabilize-notes.md
 - Ensure all "stabilize" pass commits follow the Conventional Commits format; see the
   [commit message guide](../git-commit-instructions.md) for details.
 - Prefer minimal changes per iteration; do not perform large refactors without operator approval.
-- If tests are failing due to flakiness, add retries or test-specific fixes and document them in
-  `.ai/tasks/{{ task_id }}/stabilize-notes.md`.
+- If tests are failing due to flakiness:
+    - first, add targeted retries or small, test-only mitigations (for example, a short sleep in the test code),
+    - if flakiness persists, mark the test as `xfail` with a clear, documented reason,
+    - in all cases, document flaky tests under a `Flaky tests` heading in `.ai/tasks/{{ task_id }}/stabilize-report.md`
+      and add details in `.ai/tasks/{{ task_id }}/stabilize-notes.md`.
 - Do NOT add or update secrets in the repository.
 - Update `.ai/tasks/{{ task_id }}.yaml` only after the stabilize report is produced and tests/quality gates are in
   an acceptable state (or a justified exception is recorded).

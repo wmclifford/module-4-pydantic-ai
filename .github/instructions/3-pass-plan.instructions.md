@@ -40,6 +40,32 @@ Artifacts created by each pass are stored in the `.ai/tasks/{{ task_id }}/` dire
 schemas located in `.ai/schemas/`. Helper tools used to validate the artifacts are located in `.ai/tools/` and should be
 executed using `uv`.
 
+### Glossary and Roles
+
+- `task file`: the YAML file at `.ai/tasks/{{ task_id }}.yaml` that declares a single task, its status, and evidence.
+- `task artifacts directory`: the directory `.ai/tasks/{{ task_id }}/` holding all machine-readable and human-friendly
+  artifacts for that task (`spec.yaml`, `scaffold.yaml`, `stabilize.yaml`, `*-report.md`, notes).
+- `planned_diffs`: the list of intended repository changes described in `.ai/tasks/{{ task_id }}/spec.yaml`. These are
+  produced during the Spec pass and consumed by the Scaffold pass.
+- `applied_diffs`: the list of actually applied changes recorded in `.ai/tasks/{{ task_id }}/scaffold.yaml`, including
+  commit SHAs per diff.
+- `branch_plan.initial_branch_name`: the branch name that the Spec pass defines for the task (e.g.,
+  `feat/CFG-001-add-config`); Scaffold and Stabilize must run on this branch.
+- `evidence`: structured information stored in the task file under `evidence`, including:
+    - `commit` (SHA, usually the squash commit on `main` when the task is `done`),
+    - `branchName` (task branch, optional),
+    - `timestamp` (ISO-8601, optional),
+    - `testSummary` (OBJECT describing test outcomes),
+    - optional `ciRunUrl` and `prUrl`.
+
+**Roles per pass:**
+
+- Spec: *Principal Architect* — designs the change and writes `spec.yaml` and `planned-diffs.md`.
+- Scaffold: *Senior Software Engineer* — implements `planned_diffs` and records `applied_diffs` in `scaffold.yaml` and
+  `scaffold-report.md`.
+- Stabilize: *Senior Software Engineer* — runs checks, applies minimal fixes, records results in `stabilize.yaml` and
+  `stabilize-report.md`, and prepares the PR.
+
 ### Prompts vs. Instructions (what to run)
 
 **Prompts (what to do):**
@@ -85,27 +111,25 @@ consume.
 - Prompt: `.github/prompts/spec-pass.prompt.md`
 - Instructions: `.github/instructions/spec-pass.instructions.md`
 
-**What happens (high level):**
+**Spec pass sequence (including artifact writing and branch creation):**
 
-1. The agent reads the governing documents (`docs/PLANNING.md` and `docs/TASKS.md`) and asks the operator for the
-   exact task file path; the operator may provide this to the agent in the initial request.
-2. The agent summarizes the acceptance criteria of the task and proposes planned diffs: specific file paths, change
-   markers, and justifications for the proposed changes.
-3. The agent writes artifacts (by default):
-    - `.ai/tasks/{{ task_id }}/spec.yaml` (machine-readable; validated against
-      `.ai/schemas/spec-artifact.schema.v0.1.json`)
-    - `.ai/tasks/{{ task_id }}/planned-diffs.md` (human-friendly)
-4. The agent waits for the operator to review and approve the proposed changes before any branch is created or
-   commits are made.
-
-**Upon approval only:**
-
-- Create the task branch: `<type>/{{ task_id }}-{{ slug }}`.
-- Update the task file (`.ai/tasks/{{ task_id }}.yaml`) to set the status to `in_progress` and write the spec
-  artifacts. Optionally add a short note in the task file `notes` field; evidence fields such as `branchName` and
-  `timestamp` may be populated.
-- Commit the updated task file (`.ai/tasks/{{ task_id }}.yaml`) and spec artifacts together as the FIRST commit on
-  the new branch.
+1. On `main`, run the Spec prompt and:
+    - read `docs/PLANNING.md` and `docs/TASKS.md`,
+    - read the task file `.ai/tasks/{{ task_id }}.yaml`,
+    - propose and refine `planned_diffs` with the operator.
+2. Still on `main`, write (uncommitted) artifacts:
+    - `.ai/tasks/{{ task_id }}/spec.yaml`
+    - `.ai/tasks/{{ task_id }}/planned-diffs.md`
+3. The operator reviews these artifacts and the chat output. If changes are needed, update and rewrite the artifacts on
+   `main` (still uncommitted).
+4. Once the operator explicitly approves the spec:
+    - create the task branch: `<type>/{{ task_id }}-{{ slug }}` (for example, `feat/CFG-001-add-config`),
+    - on the new branch, update `.ai/tasks/{{ task_id }}.yaml` to set `status: in_progress` and optionally record
+      `branchName` and `timestamp`,
+    - stage and commit, together, as the FIRST commit on the new branch:
+        - `.ai/tasks/{{ task_id }}.yaml`
+        - `.ai/tasks/{{ task_id }}/spec.yaml`
+        - `.ai/tasks/{{ task_id }}/planned-diffs.md`
 
 **Output of Spec:**
 
@@ -276,7 +300,74 @@ $ git push -u origin feat/CFG-001-add-config
 $ gh pr create --fill --base main --head feat/CFG-001-add-config
 ```
 
-### Diagram (Mermaid)
+## Error-handling patterns
+
+To avoid loops and ambiguous behavior, agents should follow these patterns:
+
+### Spec pass
+
+- **Missing governing docs** (`docs/PLANNING.md` or `docs/TASKS.md`):
+    - Treat as empty files, proceed, and clearly state this assumption in the spec output.
+- **Unclear acceptance criteria in the task file**:
+    - Do not guess; add explicit QUESTIONS in the spec output and avoid over-specific planned diffs.
+
+### Scaffold pass
+
+- **Invalid `spec.yaml`** (schema validation fails):
+    - Stop immediately.
+    - Present the validation errors to the operator.
+    - Do not modify any code or artifacts until the spec is corrected.
+- **Markers not found or ambiguous when applying a `modify` planned diff**:
+    - Attempt at most three targeted searches/strategies to locate a suitable insertion/modification point.
+    - If still unclear:
+        - do not perform the modification,
+        - insert a TODO marker at a reasonable location,
+        - record a QUESTION and the context in `scaffold-report.md`.
+- **Schema validation failure for `scaffold.yaml`**:
+    - Do not commit the invalid file.
+    - Log details in `.ai/tasks/{{ task_id }}/scaffold-notes.md`.
+    - Wait for the operator's direction.
+
+### Stabilize pass
+
+- **Invalid `scaffold.yaml`** or `spec.yaml`:
+    - Stop, report validation errors, do not run checks.
+- **Repeated test or lint failures**:
+    - Attempt at most three small, targeted fix iterations.
+    - After three iterations, stop making further changes and:
+        - document remaining failures and hypotheses in `stabilize-report.md`,
+        - add details to `.ai/tasks/{{ task_id }}/stabilize-notes.md`,
+        - return control to the operator.
+- **Flaky tests**:
+    - First, try retries or minimal test-specific mitigations (e.g., sleep in tests only).
+    - If still flaky, mark the tests as `xfail` with a clear reason.
+    - In all cases, document them under a `Flaky tests` section in `stabilize-report.md` and add notes in
+      `stabilize-notes.md`.
+
+## Post-merge ritual (marking tasks as `done`)
+
+The 3-pass plan brings tasks to `in_review` with an open PR. After the PR is merged (typically via squash), run this
+short post-merge ritual on the main branch:
+
+1. Identify the squash commit SHA on the base branch (for example, `main`) that corresponds to the merged PR.
+2. Edit `.ai/tasks/{{ task_id }}.yaml` on the base branch:
+    - set `status: done`,
+    - set `evidence.commit` to the squash commit SHA,
+    - optionally update:
+        - `evidence.timestamp` (current ISO-8601 time),
+        - `evidence.branchName` (the task branch name),
+        - `evidence.prUrl` (link to the merged PR),
+        - `evidence.ciRunUrl` (link to the CI run, if applicable).
+3. Commit this change directly on the base branch using a Conventional Commit, for example:
+    ```text
+    chore(tasks): mark {{ task_id }} as done
+    ```
+4. Update `docs/TASKS.md` to mark the task as completed and, if needed, add any follow-up tasks (including those for
+   flaky tests or design improvements discovered during Scaffold/Stabilize).
+
+This ritual completes the task lifecycle: `pending` → `in_progress` → `in_review` → `done`.
+
+## Diagram (Mermaid)
 
 ```mermaid
 sequenceDiagram
