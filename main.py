@@ -20,7 +20,7 @@ def main():
         return 0
 
     # Parse arguments
-    args = parser.parse_args()
+    parser.parse_args()
 
     # TODO: Implement actual CLI functionality
     print("Web Search Agent CLI - Implementation pending")
