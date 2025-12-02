@@ -32,19 +32,17 @@ evidence:
     test:
       tests: 37
       failed: 0
-      passed: 37
-    unit:
-      tests: 30
-      failed: 0
-      passed: 30
-      notes: "Configuration unit tests"
-    package:
-      tests: 7
-      failed: 0
-      passed: 7
-      notes: "Package layout tests"
+    notes: |
+      All 37 tests passed (30 configuration tests + 7 package layout tests).
+      Tests cover:
+      - Successful configuration loading with valid environment variables
+      - Missing required environment variables
+      - Malformed input values and validation
+      - Search backend configuration scenarios
+      - At least one backend required validation
+      - Whitespace trimming and empty string handling
+  prUrl: "https://github.com/wmclifford/module-4-pydantic-ai/pull/2"
   ciRunUrl: ""
-  prUrl: ""
 notes: |
   Summary:
   - Define Pydantic-based configuration models for LLM configuration
