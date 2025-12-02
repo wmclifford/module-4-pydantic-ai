@@ -1,6 +1,5 @@
 """Test that the web_search_agent package and its modules can be imported."""
 
-import pytest
 
 
 class TestPackageLayout:

@@ -18,6 +18,7 @@ members = [
 dev = [
     "pytest>=9.0.1",
     "python-dotenv>=1.0",
+    "ruff>=0.14.7",
 ]
 
 [tool.pytest.ini_options]
