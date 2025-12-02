@@ -1,7 +1,7 @@
 schemaVersion: 0.1.0
 id: TASK-002
 taskTitle: Implement configuration, env management, and initial CI workflow
-status: pending
+status: in_review
 rationale: >-
   Implement configuration loading for the web-search agent using Pydantic
   models based on environment variables, and add a minimal GitHub Actions CI
@@ -25,12 +25,24 @@ acceptance:
     - tests/test_config.py
   minCoverage: 0.0
 evidence:
-  commit: ""
-  timestamp: null
-  branchName: null
-  testSummary: null
+  commit: "a782dac0344056599e9ec5cdb16e29c1f46a6576"
+  timestamp: "2025-12-01T20:55:00Z"
+  branchName: "chore/TASK-002-config"
+  testSummary:
+    test:
+      tests: 37
+      failed: 0
+    notes: |
+      All 37 tests passed (30 configuration tests + 7 package layout tests).
+      Tests cover:
+      - Successful configuration loading with valid environment variables
+      - Missing required environment variables
+      - Malformed input values and validation
+      - Search backend configuration scenarios
+      - At least one backend required validation
+      - Whitespace trimming and empty string handling
+  prUrl: "https://github.com/wmclifford/module-4-pydantic-ai/pull/2"
   ciRunUrl: ""
-  prUrl: ""
 notes: |
   Summary:
   - Define Pydantic-based configuration models for LLM configuration

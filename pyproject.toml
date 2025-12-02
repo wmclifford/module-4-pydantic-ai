@@ -4,7 +4,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14,<3.15"
-dependencies = []
+dependencies = [
+    "pydantic>=2.0",
+]
 
 [tool.uv.workspace]
 members = [
@@ -15,4 +17,10 @@ members = [
 [dependency-groups]
 dev = [
     "pytest>=9.0.1",
+    "python-dotenv>=1.0",
+    "ruff>=0.14.7",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

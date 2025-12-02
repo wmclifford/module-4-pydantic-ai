@@ -13,6 +13,7 @@ Exit codes:
 
 Version: 0.1.0
 """
+
 from __future__ import annotations
 
 import argparse
@@ -39,8 +40,12 @@ def parse_args(args: Sequence[str]) -> argparse.Namespace:
         ),
     )
     parser.add_argument("yaml_file", help="Path to the YAML file to validate.")
-    parser.add_argument("schema_file", help="Path to the JSON Schema file (Draft 2020-12).")
-    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
+    parser.add_argument(
+        "schema_file", help="Path to the JSON Schema file (Draft 2020-12)."
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     ns = parser.parse_args(list(args))
     return ns
 
@@ -94,7 +99,9 @@ def validate_instance(instance, schema) -> Tuple[bool, List[ValidationError]]:
     return (len(errs) == 0, errs)
 
 
-def validate_yaml_against_schema(yaml_path: Path | str, schema_path: Path | str) -> Tuple[bool, List[str]]:
+def validate_yaml_against_schema(
+    yaml_path: Path | str, schema_path: Path | str
+) -> Tuple[bool, List[str]]:
     """High-level validation wrapper returning (valid, error_lines)."""
     try:
         instance = read_yaml(yaml_path)
@@ -140,4 +147,3 @@ def main(argv: Sequence[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

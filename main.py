@@ -10,9 +10,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Web Search Agent - Perform web searches using AI"
     )
-    parser.add_argument(
-        "--version", action="version", version="Web Search Agent 0.1.0"
-    )
+    parser.add_argument("--version", action="version", version="Web Search Agent 0.1.0")
 
     # For now, just print help if no arguments are provided
     if len(sys.argv) == 1:
@@ -20,7 +18,7 @@ def main():
         return 0
 
     # Parse arguments
-    args = parser.parse_args()
+    parser.parse_args()
 
     # TODO: Implement actual CLI functionality
     print("Web Search Agent CLI - Implementation pending")
