@@ -9,7 +9,7 @@ Status values: `pending`, `in_progress`, `in_review`, `done`.
 
 ### TASK-001 – Design and scaffold agent package layout
 
-- **Status:** pending
+- **Status:** done
 - **Summary:** Create the base Python package (e.g., `web_search_agent`) with `config.py`, `models.py`, `tools.py`,
   `agent.py`, `mcp_server.py`, and a basic CLI entry point wired into `main.py` (or a console script) following
   `docs/PLANNING.md` architecture.
@@ -21,16 +21,17 @@ Status values: `pending`, `in_progress`, `in_review`, `done`.
 
 ### TASK-002 – Implement configuration, env management, and initial CI workflow
 
-- **Status:** pending
+- **Status:** done ✅
 - **Summary:** Implement `config.py` to load and validate env vars: `LLM_PROVIDER`, `LLM_BASE_URL`, `LLM_API_KEY`,
   `LLM_CHOICE`, `BRAVE_API_KEY`, `SEARXNG_BASE_URL`. Add `.env.example` and set up a minimal GitHub Actions workflow
   to run formatting and tests on pushes/PRs.
-- **Acceptance Criteria:**
-    - Pydantic models for LLM, Brave, SearXNG, and app/agent config.
-    - `load_config()` reads env vars and enforces validation rules.
-    - `.env.example` lists all relevant vars with comments and no secrets.
-    - A GitHub Actions workflow (e.g., `.github/workflows/ci.yml`) runs at least `ruff` (or equivalent) and `pytest`.
-    - Unit tests cover happy path and failure modes for missing/malformed env vars.
+- **Acceptance Criteria:** ✅ All met
+    - Pydantic models for LLM, Brave, SearXNG, and app/agent config. ✅
+    - `load_config()` reads env vars and enforces validation rules. ✅
+    - `.env.example` lists all relevant vars with comments and no secrets. ✅
+    - A GitHub Actions workflow (e.g., `.github/workflows/ci.yml`) runs at least `ruff` (or equivalent) and `pytest`. ✅
+    - Unit tests cover happy path and failure modes for missing/malformed env vars. ✅
+- **Evidence:** PR #2 merged (commit: b01a64740f4350a6a93e497fe89dcaa4b32cbd59)
 
 ### TASK-003 – Implement Brave Search tool
 
