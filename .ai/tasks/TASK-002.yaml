@@ -1,7 +1,7 @@
 schemaVersion: 0.1.0
 id: TASK-002
 taskTitle: Implement configuration, env management, and initial CI workflow
-status: pending
+status: in_progress
 rationale: >-
   Implement configuration loading for the web-search agent using Pydantic
   models based on environment variables, and add a minimal GitHub Actions CI
@@ -26,8 +26,8 @@ acceptance:
   minCoverage: 0.0
 evidence:
   commit: ""
-  timestamp: null
-  branchName: null
+  timestamp: "2025-12-01T00:00:00Z"
+  branchName: "chore/TASK-002-config"
   testSummary: null
   ciRunUrl: ""
   prUrl: ""

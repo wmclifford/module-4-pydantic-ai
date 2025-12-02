@@ -1,0 +1,60 @@
+taskId: TASK-002
+author: GitHub Copilot
+createdAt: "2025-12-01T00:00:00Z"
+acceptanceCriteria: |
+  This task requires implementing configuration and environment management using Pydantic models for the web-search agent, along with a minimal GitHub Actions CI workflow. The implementation must define Pydantic-based configuration models for LLM settings (LLM_PROVIDER, LLM_BASE_URL, LLM_API_KEY, LLM_CHOICE) and search backends (BRAVE_API_KEY, SEARXNG_BASE_URL), provide a load_config() function that reads and validates environment variables with clear error messages for missing or malformed variables, enforce that at least one search backend is configured, provide a .env.example file documenting all environment variables with comments and no secrets, create a GitHub Actions workflow that runs linters (ruff) and pytest on pushes and pull requests, and include comprehensive unit tests in tests/test_config.py that cover successful loading, missing required variables, malformed inputs, and search backend configuration scenarios.
+
+branchPlan:
+  branchNamePattern: "chore/TASK-002-<slug>"
+  initialBranchName: "chore/TASK-002-config"
+  firstCommitFiles:
+    - ".ai/tasks/TASK-002.yaml"
+    - ".ai/tasks/TASK-002/spec.yaml"
+    - ".ai/tasks/TASK-002/planned-diffs.md"
+  firstCommitMessage: |
+    chore(artifacts): start task branch and add spec artifacts
+
+    - Update TASK-002.yaml status to in_progress
+    - Add spec.yaml and planned-diffs.md for config implementation
+    
+    Refs: TASK-002
+
+plannedDiffs:
+  - file: web_search_agent/config.py
+    change: add
+    marker: "new file at package root"
+    description: "Create configuration module with Pydantic models for LLM and search backends, plus load_config() entrypoint"
+    justification: "Centralizes environment variable loading and validation; provides typed config for agent, tools, CLI, and MCP server; enforces at least one search backend is configured"
+
+  - file: .env.example
+    change: add
+    marker: "new file at project root"
+    description: "Environment variables documentation file with comments explaining each variable"
+    justification: "Provides reference for all configurable environment variables; helps developers set up their environment; no secrets are stored"
+
+  - file: .github/workflows/ci.yml
+    change: add
+    marker: "new file in .github/workflows/"
+    description: "GitHub Actions workflow that runs linting (ruff) and pytest on pushes and PRs"
+    justification: "Automates code quality checks and test execution; ensures CI passes before merges; fulfills task requirement for initial CI setup"
+
+  - file: tests/test_config.py
+    change: add
+    marker: "new file in tests directory"
+    description: "Unit tests for configuration loading, validation, and error scenarios"
+    justification: "Verifies successful config loading with valid env vars; tests failure modes (missing keys, malformed values); validates backend configuration logic; ensures at least one search backend is required"
+
+requiredDependencies:
+  runtime:
+    - "pydantic>=2.0"
+  dev:
+    - "pytest>=9.0.1"
+    - "python-dotenv>=1.0"
+  notes: |
+    Pydantic must be added as a runtime dependency (not yet in the project).
+    Python-dotenv is added as a development dependency for .env file loading during development.
+    pytest is already in dev dependencies.
+    Pydantic provides all validation capabilities needed for config management.
+
+questions: [ ]
+
