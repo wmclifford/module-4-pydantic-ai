@@ -196,8 +196,8 @@ class TestAppConfig:
     def test_app_config_no_backends_raises_error(self):
         """Test that AppConfig raises error when no backends are configured."""
         with pytest.raises(
-                ValueError,
-                match="At least one search backend must be configured",
+            ValueError,
+            match="At least one search backend must be configured",
         ):
             AppConfig(
                 llm=LLMConfig(
@@ -304,8 +304,8 @@ class TestLoadConfig:
         }
         with patch.dict(os.environ, env_vars, clear=True):
             with pytest.raises(
-                    ValueError,
-                    match="At least one search backend must be configured",
+                ValueError,
+                match="At least one search backend must be configured",
             ):
                 load_config()
 

@@ -12,6 +12,7 @@ Exit codes:
 
 Version: 0.1.0
 """
+
 from __future__ import annotations
 
 import argparse
@@ -85,13 +86,15 @@ def extract_h2_sections(markdown_text: str) -> Set[str]:
         remainder = s[2:]
         remainder = remainder.lstrip()
         # Trim trailing ' #' patterns and whitespace
-        remainder = remainder.rstrip().rstrip('#').rstrip()
+        remainder = remainder.rstrip().rstrip("#").rstrip()
         if remainder:
             sections.add(_normalize_section_name(remainder))
     return sections
 
 
-def validate_sections(found_sections: Iterable[str], expected_sections: Iterable[str]) -> Tuple[bool, Set[str]]:
+def validate_sections(
+    found_sections: Iterable[str], expected_sections: Iterable[str]
+) -> Tuple[bool, Set[str]]:
     """Validate expected sections are all present in found sections.
 
     Comparison is case-insensitive; both sides are normalized to lower-case.
@@ -104,7 +107,9 @@ def validate_sections(found_sections: Iterable[str], expected_sections: Iterable
     return (len(missing) == 0, missing)
 
 
-def validate_markdown_file(path: Path | str, expected_sections: Sequence[str]) -> Tuple[bool, Set[str]]:
+def validate_markdown_file(
+    path: Path | str, expected_sections: Sequence[str]
+) -> Tuple[bool, Set[str]]:
     """Validate the markdown file exists and contains all expected H2 sections.
 
     Returns (valid, missing_sections_lowercased)
@@ -114,7 +119,9 @@ def validate_markdown_file(path: Path | str, expected_sections: Sequence[str]) -
     except FileNotFoundError:
         return (
             False,
-            {_normalize_section_name(s) for s in expected_sections} if expected_sections else set()
+            {_normalize_section_name(s) for s in expected_sections}
+            if expected_sections
+            else set(),
         )
 
     found = extract_h2_sections(text)
