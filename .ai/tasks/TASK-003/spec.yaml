@@ -1,0 +1,81 @@
+taskId: TASK-003
+author: william
+createdAt: "2025-12-05T00:04:45.467Z"
+acceptanceCriteria: |
+  - Implement a Brave-specific web search tool that accepts a query and optional
+    max results and can be wired into a future Pydantic AI agent.
+  - Use BRAVE_API_KEY from the existing configuration layer (AppConfig/BraveSearchConfig)
+    to call the Brave Web Search API at https://api.search.brave.com/res/v1/web/search
+    with correct headers and query parameters.
+  - Parse Brave Web Search API responses into backend-agnostic SearchResult and
+    SearchResults models, including fields like title, url, snippet, source,
+    total count where available, and an optional summarizer_key.
+  - Handle HTTP, network, and JSON parsing errors robustly using a custom
+    BraveSearchError exception, and expose a generic error field and raw
+    response on SearchResults for debugging.
+  - Provide unit tests for the Brave search tool that mock HTTP interactions to
+    verify request construction, response parsing, error handling, and the
+    behavior when Brave returns valid JSON without web.results.
+branchPlan:
+  branchNamePattern: '<type>/<task_id>-<slug>'
+  initialBranchName: feat/TASK-003-brave-search-tool
+  firstCommitFiles:
+    - .ai/tasks/TASK-003.yaml
+    - .ai/tasks/TASK-003/spec.yaml
+    - .ai/tasks/TASK-003/planned-diffs.md
+  firstCommitMessage: |
+    chore(artifacts): start task branch and add spec artifacts
+
+    Refs: TASK-003
+plannedDiffs:
+  - file: web_search_agent/models.py
+    change: modify
+    marker: 'after the module-level docstring at the top of web_search_agent/models.py'
+    description: 'Add backend-agnostic SearchResult and SearchResults Pydantic models with generic error and raw fields.'
+    justification: |
+      TASK-003 requires normalized SearchResult/SearchResults models to represent
+      Brave web search results in a backend-agnostic way that can also support
+      SearXNG later. Adding these models in models.py centralizes the domain
+      schema, ensures Pydantic-based validation, and provides shared fields like
+      title, url, snippet, backend, total, summarizer_key, error, and raw.
+  - file: web_search_agent/tools.py
+    change: modify
+    marker: 'after the module-level docstring in web_search_agent/tools.py'
+    description: 'Implement BraveSearchError, BraveSearchClient using httpx, and a create_brave_search_tool factory.'
+    justification: |
+      Implementing a BraveSearchClient encapsulates HTTP details for calling the
+      Brave Web Search API (headers, parameters, error handling, JSON parsing)
+      while the create_brave_search_tool factory returns a simple callable
+      (query, max_results) suitable for later registration as a Pydantic AI
+      tool. This clean separation respects the existing config layer (using
+      BRAVE_API_KEY from AppConfig/BraveSearchConfig), uses httpx as the shared
+      HTTP client, raises BraveSearchError on hard failures, logs and returns an
+      empty SearchResults with raw data when web.results is missing, and keeps
+      summarizer support internal via summary=1 and summarizer_key extraction
+      without exposing a summary flag in the public tool.
+  - file: tests/test_tools_brave.py
+    change: add
+    marker: 'new file under tests/ named tests/test_tools_brave.py'
+    description: 'Add unit tests for the Brave web search tool and BraveSearchClient.'
+    justification: |
+      New tests are required by TASK-003 to verify that the Brave search tool
+      constructs correct HTTP requests (URL, headers, params), parses Brave
+      responses into normalized SearchResults/ SearchResults, raises
+      BraveSearchError for HTTP and JSON failures, and returns an empty
+      SearchResults with raw data when Brave returns valid JSON without
+      web.results. These tests use pytest and standard mocking/monkeypatching to
+      avoid external HTTP calls and ensure future refactors do not break the
+      tool's behavior.
+requiredDependencies:
+  runtime:
+    - httpx
+  dev: []
+  notes: |
+    httpx will be used as the shared HTTP client for Brave Web Search (and
+    likely SearXNG later), providing modern synchronous and asynchronous
+    capabilities. No additional dev dependencies are required; pytest and
+    Python's standard mocking tools are sufficient for HTTP mocking.
+questions:
+  - Is the Python standard logging module (using module-level loggers) acceptable
+    for logging cases where Brave returns valid JSON without web.results, with
+    details also captured in the SearchResults.raw field?
