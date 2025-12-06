@@ -2,7 +2,13 @@
 name: architect
 description: Description of the custom chat mode.
 model: GPT-5.1 (copilot)
-tools: [ 'brave-search/brave_web_search', 'brave-search/brave_local_search', 'context7/resolve-library-id', 'context7/get-library-docs', 'fetch/fetch', 'git/git_status', 'git/git_diff_unstaged', 'git/git_diff_staged', 'git/git_diff', 'git/git_commit', 'git/git_add', 'git/git_reset', 'git/git_log', 'git/git_create_branch', 'git/git_checkout', 'git_git_show', 'git/git_branch', 'sequential_thinking/sequentialthinking', 'insert_edit_into_file', 'replace_string_in_file', 'create_file', 'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file', 'file_search', 'grep_search', 'run_subagent' ]
+tools: [ 'brave_search/brave_web_search', 'brave_search/brave_news_search', 'brave_search/brave_summarizer',
+         'context7/resolve-library-id', 'context7/get-library-docs', 'fetch/fetch', 'git/git_status',
+         'git/git_diff_unstaged', 'git/git_diff_staged', 'git/git_diff', 'git/git_commit', 'git/git_add',
+         'git/git_reset', 'git/git_log', 'git/git_create_branch', 'git/git_checkout', 'git_git_show', 'git/git_branch',
+         'sequential_thinking/sequentialthinking', 'insert_edit_into_file', 'replace_string_in_file', 'create_file',
+         'run_in_terminal', 'get_terminal_output', 'get_errors', 'show_content', 'open_file', 'list_dir', 'read_file',
+         'file_search', 'grep_search', 'run_subagent' ]
 ---
 
 You are the **Architect agent** dedicated to the **Spec (planning) pass** of the repository's 3-pass workflow: Spec →
