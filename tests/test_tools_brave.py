@@ -13,7 +13,12 @@ from unittest.mock import Mock, patch
 import httpx
 import pytest
 
-from web_search_agent.config import AppConfig, LLMConfig, BraveSearchConfig, SearXNGConfig
+from web_search_agent.config import (
+    AppConfig,
+    LLMConfig,
+    BraveSearchConfig,
+    SearXNGConfig,
+)
 from web_search_agent.models import SearchResult, SearchResults
 from web_search_agent.tools import (
     BraveSearchClient,
@@ -243,7 +248,9 @@ class TestBraveSearchTool:
 
     def test_create_brave_search_tool_empty_api_key(self):
         """Test that creating tool fails with empty Brave API key."""
-        with pytest.raises(ValueError, match="Brave Search API key cannot be an empty string"):
+        with pytest.raises(
+            ValueError, match="Brave Search API key cannot be an empty string"
+        ):
             BraveSearchConfig(api_key="")
 
     @patch("web_search_agent.tools.BraveSearchClient.search")

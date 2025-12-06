@@ -29,12 +29,12 @@ class BraveSearchClient:
     """
 
     def __init__(
-            self,
-            api_key: str,
-            *,
-            base_url: str = "https://api.search.brave.com",
-            client: Optional[httpx.Client] = None,
-            timeout: float = 10.0,
+        self,
+        api_key: str,
+        *,
+        base_url: str = "https://api.search.brave.com",
+        client: Optional[httpx.Client] = None,
+        timeout: float = 10.0,
     ) -> None:
         """Initialize the Brave Search client.
 
@@ -57,15 +57,15 @@ class BraveSearchClient:
         self._owns_client = client is None  # Track if we created the client
 
     def search(
-            self,
-            query: str,
-            *,
-            count: int = 5,
-            offset: int = 0,
-            country: Optional[str] = None,
-            language: Optional[str] = None,
-            safesearch: Optional[str] = None,
-            summary: bool = False,
+        self,
+        query: str,
+        *,
+        count: int = 5,
+        offset: int = 0,
+        country: Optional[str] = None,
+        language: Optional[str] = None,
+        safesearch: Optional[str] = None,
+        summary: bool = False,
     ) -> SearchResults:
         """Perform a web search using the Brave Search API.
 
@@ -121,7 +121,9 @@ class BraveSearchClient:
         try:
             data = response.json()
         except ValueError as e:
-            raise BraveSearchError(f"Failed to parse Brave API response as JSON: {e}") from e
+            raise BraveSearchError(
+                f"Failed to parse Brave API response as JSON: {e}"
+            ) from e
 
         return self._parse_response(query, data)
 
@@ -184,7 +186,9 @@ class BraveSearchClient:
                 pass
 
 
-def create_brave_search_tool(app_config: AppConfig) -> Callable[[str, int], SearchResults]:
+def create_brave_search_tool(
+    app_config: AppConfig,
+) -> Callable[[str, int], SearchResults]:
     """Create a Brave search tool function for use with Pydantic AI.
 
     Args:
