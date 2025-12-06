@@ -1,0 +1,30 @@
+taskId: TASK-003
+author: william
+createdAt: "2025-12-06T13:45:00.000Z"
+specReference: .ai/tasks/TASK-003/spec.yaml
+appliedDiffs:
+  - file: web_search_agent/models.py
+    action: modify
+    commitSha: d0a5f00b4b47cd45f2b410ce7c34e6032cf109d7
+    commitMessage: |
+      feat(models): add SearchResult and SearchResults Pydantic models
+  - file: web_search_agent/tools.py
+    action: modify
+    commitSha: 80407a50f6c6c94830a1f16c8dc3e8d4a7961b5b
+    commitMessage: |
+      feat(tools): implement BraveSearchClient and brave search tool factory
+  - file: tests/test_tools_brave.py
+    action: add
+    commitSha: 5a9bc2731b3b45c0563f8d0d47f2567a09cfa4c4
+    commitMessage: |
+      test(tools): add comprehensive unit tests for Brave search tool
+resolvedDependencies:
+  runtime:
+    - httpx==0.28.1
+  dev: [ ]
+  lockfileUpdated: true
+  notes: "Installed httpx per the spec requirements; lockfile already tracked the dependency."
+unresolvedQuestions:
+  - "Is the module-level logging approach acceptable for signaling Brave responses that lack web.results?"
+version: "0.1.0"
+

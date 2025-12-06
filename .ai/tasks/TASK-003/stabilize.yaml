@@ -1,0 +1,17 @@
+taskId: TASK-003
+author: william
+createdAt: "2025-12-06T13:35:00.000Z"
+specReference: .ai/tasks/TASK-003/spec.yaml
+appliedCommits:
+  - 98405c45a393750ed2735ff45541b671899422f2
+  - 6dc604b92f0f8286099c9adefdb9caf73f16f72c
+testSummary:
+  pytest tests/test_tools_brave.py:
+    tests: 20
+    failed: 0
+    duration: "0:00:00.35"
+  notes: "Pytest succeeded; the only warnings were the destructor guard which is now checked before closing."
+lintSummary:
+  notes: "Not run in this pass; focus was stabilization/testing."
+version: "0.1.0"
+
