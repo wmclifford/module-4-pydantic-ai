@@ -1,7 +1,7 @@
 schemaVersion: 0.1.0
 id: TASK-003
 taskTitle: Implement Brave Search tool
-status: in_review
+status: done
 rationale: >-
   Implement a Brave Search web-search tool compatible with the Pydantic AI
   agent, using the BRAVE_API_KEY environment variable and returning structured,
@@ -26,21 +26,17 @@ acceptance:
     - tests/test_tools_brave.py
   minCoverage: 0.0
 evidence:
-  commit:
-    - "2440e5c74c957e18b480d0e4dd870123c1719519"
-    - "98405c45a393750ed2735ff45541b671899422f2"
-    - "6dc604b92f0f8286099c9adefdb9caf73f16f72c"
-    - "a47d53c1b5b3392f4b889ccf5612727984098f28"
-  timestamp: "2025-12-06T13:35:00.000Z"
+  commit: "846a11e209c683e86db8c44037e654e66f3942a8"
+  timestamp: "2025-12-06T18:56:36Z"
   branchName: feat/TASK-003-brave-search-tool
   testSummary:
     test:
       failed: 0
       tests: 20
       errors: 0
-    notes: "pytest tests/test_tools_brave.py (warnings resolved by guarding the client destructor)."
-  ciRunUrl: ""
-  prUrl: ""
+    notes: "pytest tests/test_tools_brave.py; CI run linted/tested via GitHub Actions after merge."
+  ciRunUrl: "https://github.com/wmclifford/module-4-pydantic-ai/actions/runs/19992855716"
+  prUrl: "https://github.com/wmclifford/module-4-pydantic-ai/pull/3"
 notes: |
   Summary:
   - Implement a Brave-specific search tool that can be invoked by the agent to
