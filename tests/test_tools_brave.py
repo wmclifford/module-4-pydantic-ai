@@ -13,7 +13,7 @@ from unittest.mock import Mock, patch
 import httpx
 import pytest
 
-from web_search_agent.config import AppConfig, LLMConfig, BraveSearchConfig
+from web_search_agent.config import AppConfig, LLMConfig, BraveSearchConfig, SearXNGConfig
 from web_search_agent.models import SearchResult, SearchResults
 from web_search_agent.tools import (
     BraveSearchClient,
@@ -220,9 +220,9 @@ class TestBraveSearchTool:
     def test_create_brave_search_tool_valid_config(self):
         """Test creating a Brave search tool with valid configuration."""
         app_config = AppConfig(
-            llm=LLMConfig(provider="openai", api_key="test-key"),
+            llm=LLMConfig(provider="openai", api_key="test-key", choice="gpt-4"),
             brave=BraveSearchConfig(api_key="brave-key"),
-            searxng=None,
+            searxng=SearXNGConfig(base_url=None),
         )
 
         tool = create_brave_search_tool(app_config)
@@ -233,9 +233,9 @@ class TestBraveSearchTool:
     def test_create_brave_search_tool_missing_api_key(self):
         """Test that creating tool fails without Brave API key."""
         app_config = AppConfig(
-            llm=LLMConfig(provider="openai", api_key="test-key"),
-            brave=None,
-            searxng=None,
+            llm=LLMConfig(provider="openai", api_key="test-key", choice="gpt-4"),
+            brave=BraveSearchConfig(api_key=None),
+            searxng=SearXNGConfig(base_url="https://example.com"),
         )
 
         with pytest.raises(ValueError, match="Brave API key not configured"):
@@ -243,14 +243,8 @@ class TestBraveSearchTool:
 
     def test_create_brave_search_tool_empty_api_key(self):
         """Test that creating tool fails with empty Brave API key."""
-        app_config = AppConfig(
-            llm=LLMConfig(provider="openai", api_key="test-key"),
-            brave=BraveSearchConfig(api_key=""),
-            searxng=None,
-        )
-
-        with pytest.raises(ValueError, match="Brave API key not configured"):
-            create_brave_search_tool(app_config)
+        with pytest.raises(ValueError, match="Brave Search API key cannot be an empty string"):
+            BraveSearchConfig(api_key="")
 
     @patch("web_search_agent.tools.BraveSearchClient.search")
     def test_brave_search_tool_callable(self, mock_search):
@@ -263,9 +257,9 @@ class TestBraveSearchTool:
         )
 
         app_config = AppConfig(
-            llm=LLMConfig(provider="openai", api_key="test-key"),
+            llm=LLMConfig(provider="openai", api_key="test-key", choice="gpt-4"),
             brave=BraveSearchConfig(api_key="brave-key"),
-            searxng=None,
+            searxng=SearXNGConfig(base_url=None),
         )
 
         tool = create_brave_search_tool(app_config)

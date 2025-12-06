@@ -177,7 +177,7 @@ class BraveSearchClient:
 
     def __del__(self) -> None:
         """Clean up resources."""
-        if self._owns_client:
+        if getattr(self, "_owns_client", False):
             try:
                 self._client.close()
             except Exception:
