@@ -6,7 +6,7 @@ environment variables related to LLM settings and search backends.
 
 from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 
 class LLMConfig(BaseModel):
@@ -111,8 +111,7 @@ class SearXNGConfig(BaseModel):
         cleaned = [cat.strip() for cat in v if cat and cat.strip()]
         return cleaned or ["general"]
 
-    class Config:
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
 
 class AppConfig(BaseModel):
