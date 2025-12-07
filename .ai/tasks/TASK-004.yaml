@@ -1,7 +1,7 @@
 schemaVersion: 0.1.0
 id: TASK-004
 taskTitle: Implement SearXNG Search tool
-status: in_progress
+status: in_review
 rationale: >-
   Implement a SearXNG-based web-search tool compatible with the Pydantic AI
   agent, using the SEARXNG_BASE_URL environment variable and returning
@@ -22,15 +22,38 @@ acceptance:
     - web_search_agent/tools/searxng.py
     - tests/test_tools_searxng.py
   commands:
+    - uv run ruff check
+    - uv run ruff format --check .
     - pytest tests/test_tools_searxng.py
   testsMustExist:
     - tests/test_tools_searxng.py
   minCoverage: 0.0
 evidence:
-  commit: ""
-  timestamp: "2025-12-07T00:00:00Z"
+  commit: 92265bfb9e10a1e021f9eeaf432288fc0b89ff11
+  timestamp: "2025-12-07T07:55:00Z"
   branchName: "feat/TASK-004-searxng-search-tool"
-  testSummary: null
+  testSummary:
+    test:
+      tests: 7
+      failed: 0
+    notes: |
+      lint:
+        ruffCheck:
+          command: uv run ruff check
+          result: passed
+        ruffFormat:
+          command: uv run ruff format --check .
+          result: passed
+      targeted:
+        command: uv run pytest tests/test_tools_searxng.py
+        warnings:
+          - PydanticDeprecatedSince20 warning about class-based config
+      fullSuite:
+        command: uv run pytest
+        tests: 64
+        failed: 0
+        warnings:
+          - PydanticDeprecatedSince20 warning about class-based config
   ciRunUrl: ""
   prUrl: ""
 notes: |
