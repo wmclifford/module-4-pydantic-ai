@@ -4,9 +4,9 @@ This module provides Pydantic-based configuration models for loading and validat
 environment variables related to LLM settings and search backends.
 """
 
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, ConfigDict, field_validator
 
 
 class LLMConfig(BaseModel):
@@ -72,9 +72,29 @@ class SearXNGConfig(BaseModel):
 
     Attributes:
         base_url (Optional[str]): The base URL for the SearXNG instance. If None, SearXNG is disabled.
+        timeout (float): HTTP timeout for SearXNG requests.
+        default_categories (List[str]): Categories applied when none are supplied.
+        default_language (Optional[str]): Default language code for requests.
+        default_time_range (Optional[str]): Default SearXNG time_range filter.
     """
 
     base_url: Optional[str] = Field(None, description="SearXNG base URL")
+    timeout: float = Field(
+        default=10.0,
+        description="Timeout in seconds for SearXNG requests; balances responsiveness with slower meta-search engines.",
+    )
+    default_categories: List[str] = Field(
+        default_factory=lambda: ["general"],
+        description="Default categories to query when none are provided, keeping results focused on general web content.",
+    )
+    default_language: Optional[str] = Field(
+        default=None,
+        description="Optional default language code (e.g., 'en'); None defers to the SearXNG server defaults.",
+    )
+    default_time_range: Optional[str] = Field(
+        default=None,
+        description="Optional time_range filter (e.g., 'day', 'week', 'month'); None applies no extra filtering.",
+    )
 
     @field_validator("base_url")
     @classmethod
@@ -83,6 +103,15 @@ class SearXNGConfig(BaseModel):
         if v is not None and not v.strip():
             raise ValueError("SearXNG base URL cannot be an empty string")
         return v.strip() if v else None
+
+    @field_validator("default_categories")
+    @classmethod
+    def normalize_categories(cls, v: List[str]) -> List[str]:
+        """Ensure default categories are trimmed and fall back to ['general']."""
+        cleaned = [cat.strip() for cat in v if cat and cat.strip()]
+        return cleaned or ["general"]
+
+    model_config = ConfigDict(extra="forbid")
 
 
 class AppConfig(BaseModel):
@@ -164,7 +193,19 @@ def load_config() -> AppConfig:
                 choice=llm_choice,
             ),
             brave=BraveSearchConfig(api_key=brave_api_key),
-            searxng=SearXNGConfig(base_url=searxng_base_url),
+            searxng=SearXNGConfig(
+                base_url=searxng_base_url,
+                timeout=float(os.getenv("SEARXNG_TIMEOUT", "10.0")),
+                default_categories=[
+                    cat
+                    for cat in os.getenv("SEARXNG_DEFAULT_CATEGORIES", "general").split(
+                        ","
+                    )
+                    if cat and cat.strip()
+                ],
+                default_language=os.getenv("SEARXNG_DEFAULT_LANGUAGE"),
+                default_time_range=os.getenv("SEARXNG_DEFAULT_TIME_RANGE"),
+            ),
         )
         return config
     except ValidationError as e:

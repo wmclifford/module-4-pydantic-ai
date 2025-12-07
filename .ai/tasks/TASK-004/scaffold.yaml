@@ -1,0 +1,47 @@
+taskId: TASK-004
+author: william
+createdAt: "2025-12-07T07:30:00Z"
+specReference: .ai/tasks/TASK-004/spec.yaml
+appliedDiffs:
+  - file: web_search_agent/config.py
+    action: modify
+    commitSha: ea6a458d45e85f0184f8af81e6f604adc7f07ea5
+    commitMessage: |
+      feat(config): extend SearXNG settings
+      
+      Refs: TASK-004
+  - file: web_search_agent/models.py
+    action: modify
+    commitSha: 669433f3f15a0dda9b1bf60ca76f7b5054f822cf
+    commitMessage: |
+      fix(models): clarify search result docstrings
+      
+      Refs: TASK-004
+  - file: web_search_agent/tools.py
+    action: modify
+    commitSha: 8e35f883bb14700215c464daa6447dd21b0b476a
+    commitMessage: |
+      feat(tools): add SearXNG search client and tool
+      
+      Refs: TASK-004
+  - file: tests/test_tools_searxng.py
+    action: add
+    commitSha: 36021da90512fdf0ee93bac13ceac3af64e2fb57
+    commitMessage: |
+      test(tools): add SearXNG tool tests
+      
+      Refs: TASK-004
+  - file: docs/TASKS.md
+    action: modify
+    commitSha: 5d19aa5e25e9f34c0a17e5002e659af5082514b1
+    commitMessage: |
+      docs(tasks): update task statuses and acceptance criteria formatting
+      
+      - Change task statuses from pending to in_progress or done as applicable.
+      - Format acceptance criteria for clarity and consistency.
+      - Add evidence section for TASK-004 detailing implementation and testing.
+
+      Refs: TASK-004
+resolvedDependencies:
+  runtime: [ ]
+  dev: [ ]

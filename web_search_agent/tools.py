@@ -4,8 +4,10 @@ This module will contain tool functions for interacting with various
 search engines like Brave Search API and SearXNG instances.
 """
 
+from __future__ import annotations
+
 import logging
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Iterable, List, Optional
 
 import httpx
 
@@ -186,6 +188,163 @@ class BraveSearchClient:
                 pass
 
 
+class SearxngSearchError(Exception):
+    """Raised when a SearXNG request fails."""
+
+
+class SearxngSearchClient:
+    """HTTP client encapsulating SearXNG search requests."""
+
+    def __init__(
+        self,
+        base_url: str,
+        *,
+        client: Optional[httpx.Client] = None,
+        timeout: float = 10.0,
+        default_categories: Optional[List[str]] = None,
+        default_language: Optional[str] = None,
+        default_time_range: Optional[str] = None,
+    ) -> None:
+        if not base_url or not base_url.strip():
+            raise ValueError("base_url must be a non-empty string")
+
+        self.base_url = base_url.rstrip("/")
+        self.timeout = timeout
+        self.default_categories = default_categories or ["general"]
+        self.default_language = default_language
+        self.default_time_range = default_time_range
+        self._client = client or httpx.Client(timeout=timeout)
+        self._owns_client = client is None
+
+    def search(
+        self,
+        query: str,
+        *,
+        max_results: int = 5,
+        page: int = 1,
+        categories: Optional[List[str]] = None,
+        language: Optional[str] = None,
+        time_range: Optional[str] = None,
+    ) -> SearchResults:
+        """Execute a SearXNG search and normalize the response."""
+        params: dict[str, Any] = {
+            "q": query,
+            "format": "json",
+            "pageno": max(page, 1),
+        }
+
+        cats = categories or self.default_categories
+        if cats:
+            params["categories"] = ",".join(cats)
+
+        lang = language or self.default_language
+        if lang:
+            params["language"] = lang
+
+        tr = time_range or self.default_time_range
+        if tr:
+            params["time_range"] = tr
+
+        headers = {
+            "Accept": "application/json",
+            "User-Agent": "web-search-agent/1.0 (https://github.com/wmclifford/ai-agent-mastery-course)",
+        }
+
+        url = f"{self.base_url}/search"
+
+        try:
+            response = self._client.get(url, params=params, headers=headers)
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            response = exc.response
+            status = getattr(response, "status_code", "unknown")
+            text = getattr(response, "text", str(exc))
+            raise SearxngSearchError(
+                f"SearXNG returned status {status}: {text}"
+            ) from exc
+        except httpx.TimeoutException as exc:
+            raise SearxngSearchError(f"SearXNG request timed out: {exc}") from exc
+        except httpx.RequestError as exc:
+            raise SearxngSearchError(f"Request to SearXNG failed: {exc}") from exc
+
+        try:
+            data = response.json()
+        except ValueError as exc:
+            raise SearxngSearchError(
+                f"Failed to parse SearXNG JSON response: {exc}"
+            ) from exc
+
+        return self._parse_response(query=query, data=data, max_results=max_results)
+
+    def _parse_response(
+        self,
+        *,
+        query: str,
+        data: dict[str, Any],
+        max_results: int,
+    ) -> SearchResults:
+        raw_results = data.get("results")
+        error: Optional[str] = None
+
+        if not isinstance(raw_results, Iterable):
+            logger.warning("SearXNG response missing 'results' iterable")
+            raw_results = []
+            error = "No results found in SearXNG response"
+        else:
+            raw_results = list(raw_results)
+
+        results: list[SearchResult] = []
+
+        for idx, item in enumerate(raw_results):
+            if not isinstance(item, dict):
+                continue
+            title = item.get("title") or item.get("url") or ""
+            url = item.get("url", "")
+            snippet = item.get("content") or ""
+            parsed_url = item.get("parsed_url") or {}
+            source = item.get("source") or parsed_url.get("hostname")
+            position = item.get("position")
+            rank = position if isinstance(position, int) else idx + 1
+
+            results.append(
+                SearchResult(
+                    title=title,
+                    url=url,
+                    snippet=snippet,
+                    source=source,
+                    rank=rank,
+                    raw=item,
+                )
+            )
+
+        if max_results > 0:
+            results = results[:max_results]
+
+        total = data.get("number_of_results")
+        if not isinstance(total, int) or total <= 0:
+            total = len(results)
+
+        if not results and error is None:
+            error = "No results found in SearXNG response"
+
+        return SearchResults(
+            query=query,
+            backend="searxng",
+            results=results,
+            total=total,
+            summarizer_key=None,
+            error=error,
+            raw=data,
+        )
+
+    def __del__(self) -> None:
+        if getattr(self, "_owns_client", False):
+            try:
+                self._client.close()
+            except Exception:
+                pass
+
+
 def create_brave_search_tool(
     app_config: AppConfig,
 ) -> Callable[[str, int], SearchResults]:
@@ -220,3 +379,28 @@ def create_brave_search_tool(
         return client.search(query=query, count=max_results, summary=False)
 
     return brave_search
+
+
+def create_searxng_search_tool(
+    app_config: AppConfig,
+) -> Callable[[str, int], SearchResults]:
+    """Create a SearXNG search tool function for Pydantic AI."""
+    if not app_config.searxng or not app_config.searxng.base_url:
+        raise ValueError(
+            "SearXNG base URL not configured. Set SEARXNG_BASE_URL environment variable."
+        )
+
+    cfg = app_config.searxng
+    client = SearxngSearchClient(
+        base_url=cfg.base_url,
+        timeout=cfg.timeout,
+        default_categories=cfg.default_categories,
+        default_language=cfg.default_language,
+        default_time_range=cfg.default_time_range,
+    )
+
+    def searxng_search(query: str, max_results: int = 5) -> SearchResults:
+        """Execute a SearXNG search request."""
+        return client.search(query=query, max_results=max_results)
+
+    return searxng_search

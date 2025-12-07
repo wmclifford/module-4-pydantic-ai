@@ -1,0 +1,33 @@
+taskId: TASK-004
+author: william
+createdAt: "2025-12-07T07:55:00Z"
+specReference: .ai/tasks/TASK-004/spec.yaml
+appliedCommits:
+  - 8e35f883bb14700215c464daa6447dd21b0b476a
+  - 36021da90512fdf0ee93bac13ceac3af64e2fb57
+  - e241ed3f47a075cadd75107fab6d148e5598cd7c
+  - 92265bfb9e10a1e021f9eeaf432288fc0b89ff11
+lintSummary:
+  ruff:
+    command: uv run ruff check
+    result: passed
+  ruffFormat:
+    command: uv run ruff format --check .
+    result: passed
+testSummary:
+  targeted:
+    command: uv run pytest tests/test_tools_searxng.py
+    result: passed
+    tests: 7
+    failed: 0
+    warnings:
+      - PydanticDeprecatedSince20 warning about class-based config
+  fullSuite:
+    command: uv run pytest
+    result: passed
+    tests: 64
+    failed: 0
+    warnings:
+      - PydanticDeprecatedSince20 warning about class-based config
+version: "0.1.0"
+
