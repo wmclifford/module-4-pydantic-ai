@@ -199,7 +199,9 @@ def load_config() -> AppConfig:
                 timeout=float(os.getenv("SEARXNG_TIMEOUT", "10.0")),
                 default_categories=[
                     cat
-                    for cat in os.getenv("SEARXNG_DEFAULT_CATEGORIES", "general").split(",")
+                    for cat in os.getenv("SEARXNG_DEFAULT_CATEGORIES", "general").split(
+                        ","
+                    )
                     if cat and cat.strip()
                 ],
                 default_language=os.getenv("SEARXNG_DEFAULT_LANGUAGE"),

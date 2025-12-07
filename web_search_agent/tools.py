@@ -31,12 +31,12 @@ class BraveSearchClient:
     """
 
     def __init__(
-            self,
-            api_key: str,
-            *,
-            base_url: str = "https://api.search.brave.com",
-            client: Optional[httpx.Client] = None,
-            timeout: float = 10.0,
+        self,
+        api_key: str,
+        *,
+        base_url: str = "https://api.search.brave.com",
+        client: Optional[httpx.Client] = None,
+        timeout: float = 10.0,
     ) -> None:
         """Initialize the Brave Search client.
 
@@ -59,15 +59,15 @@ class BraveSearchClient:
         self._owns_client = client is None  # Track if we created the client
 
     def search(
-            self,
-            query: str,
-            *,
-            count: int = 5,
-            offset: int = 0,
-            country: Optional[str] = None,
-            language: Optional[str] = None,
-            safesearch: Optional[str] = None,
-            summary: bool = False,
+        self,
+        query: str,
+        *,
+        count: int = 5,
+        offset: int = 0,
+        country: Optional[str] = None,
+        language: Optional[str] = None,
+        safesearch: Optional[str] = None,
+        summary: bool = False,
     ) -> SearchResults:
         """Perform a web search using the Brave Search API.
 
@@ -196,14 +196,14 @@ class SearxngSearchClient:
     """HTTP client encapsulating SearXNG search requests."""
 
     def __init__(
-            self,
-            base_url: str,
-            *,
-            client: Optional[httpx.Client] = None,
-            timeout: float = 10.0,
-            default_categories: Optional[List[str]] = None,
-            default_language: Optional[str] = None,
-            default_time_range: Optional[str] = None,
+        self,
+        base_url: str,
+        *,
+        client: Optional[httpx.Client] = None,
+        timeout: float = 10.0,
+        default_categories: Optional[List[str]] = None,
+        default_language: Optional[str] = None,
+        default_time_range: Optional[str] = None,
     ) -> None:
         if not base_url or not base_url.strip():
             raise ValueError("base_url must be a non-empty string")
@@ -217,14 +217,14 @@ class SearxngSearchClient:
         self._owns_client = client is None
 
     def search(
-            self,
-            query: str,
-            *,
-            max_results: int = 5,
-            page: int = 1,
-            categories: Optional[List[str]] = None,
-            language: Optional[str] = None,
-            time_range: Optional[str] = None,
+        self,
+        query: str,
+        *,
+        max_results: int = 5,
+        page: int = 1,
+        categories: Optional[List[str]] = None,
+        language: Optional[str] = None,
+        time_range: Optional[str] = None,
     ) -> SearchResults:
         """Execute a SearXNG search and normalize the response."""
         params: dict[str, Any] = {
@@ -277,11 +277,11 @@ class SearxngSearchClient:
         return self._parse_response(query=query, data=data, max_results=max_results)
 
     def _parse_response(
-            self,
-            *,
-            query: str,
-            data: dict[str, Any],
-            max_results: int,
+        self,
+        *,
+        query: str,
+        data: dict[str, Any],
+        max_results: int,
     ) -> SearchResults:
         raw_results = data.get("results")
         error: Optional[str] = None
@@ -346,7 +346,7 @@ class SearxngSearchClient:
 
 
 def create_brave_search_tool(
-        app_config: AppConfig,
+    app_config: AppConfig,
 ) -> Callable[[str, int], SearchResults]:
     """Create a Brave search tool function for use with Pydantic AI.
 
@@ -382,7 +382,7 @@ def create_brave_search_tool(
 
 
 def create_searxng_search_tool(
-        app_config: AppConfig,
+    app_config: AppConfig,
 ) -> Callable[[str, int], SearchResults]:
     """Create a SearXNG search tool function for Pydantic AI."""
     if not app_config.searxng or not app_config.searxng.base_url:
