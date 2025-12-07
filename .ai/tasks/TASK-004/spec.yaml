@@ -1,0 +1,98 @@
+taskId: TASK-004
+author: william
+createdAt: "2025-12-07T00:00:00Z"
+acceptanceCriteria: >-
+  Implement a SearXNG-based web-search tool compatible with the existing Brave
+  tool, using SEARXNG_BASE_URL via SearXNGConfig, normalizing results into
+  SearchResult/SearchResults models, handling HTTP and parsing errors
+  robustly, and providing unit tests as described in .ai/tasks/TASK-004.yaml
+  and docs/TASKS.md.
+branchPlan:
+  branchNamePattern: "<type>/TASK-004-<slug>"
+  initialBranchName: "feat/TASK-004-implement-searxng-search-tool"
+  firstCommitFiles:
+    - ".ai/tasks/TASK-004.yaml"
+    - ".ai/tasks/TASK-004/spec.yaml"
+    - ".ai/tasks/TASK-004/planned-diffs.md"
+  firstCommitMessage: |-
+    chore(artifacts): start task branch and add spec artifacts
+
+    Refs: TASK-004
+plannedDiffs:
+  - file: web_search_agent/config.py
+    change: modify
+    marker: >-
+      Inside the SearXNGConfig model definition and where SearXNGConfig is
+      constructed in load_config() or equivalent.
+    description: >-
+      Extend SearXNG configuration with timeout, default_categories,
+      default_language, and default_time_range fields mapped from
+      SEARXNG_TIMEOUT, SEARXNG_DEFAULT_CATEGORIES, SEARXNG_DEFAULT_LANGUAGE,
+      and SEARXNG_DEFAULT_TIME_RANGE env vars.
+    justification: >-
+      Centralizes SearXNG-specific defaults and makes the SearXNG client easy
+      to configure while documenting why the defaults are chosen (balanced
+      timeout, focused categories, and optional language/time filters).
+  - file: web_search_agent/models.py
+    change: modify
+    marker: >-
+      Inside the SearchResult and SearchResults class docstrings.
+    description: >-
+      Clarify that SearchResult and SearchResults are intentionally minimal and
+      backend-agnostic, with backend-specific fields preserved only in raw.
+    justification: >-
+      Keeps the public data model stable across Brave and SearXNG while still
+      allowing callers to inspect backend-specific JSON in raw when needed.
+  - file: web_search_agent/tools/searxng.py
+    change: add
+    marker: >-
+      New module defining SearxngSearchClient and SearxngSearchError.
+    description: >-
+      Add a dedicated SearXNG HTTP client and error type that call
+      {base_url}/search with format=json and map responses into
+      SearchResults.
+    justification: >-
+      Encapsulates SearXNG request construction, error handling, and response
+      parsing in a testable unit that mirrors the existing Brave client.
+  - file: web_search_agent/tools.py
+    change: modify
+    marker: >-
+      Imports section near Brave-related imports and next to
+      create_brave_search_tool definition.
+    description: >-
+      Import SearxngSearchClient/SearxngSearchError and add
+      create_searxng_search_tool(app_config) returning a minimal
+      searxng_search(query, max_results) callable.
+    justification: >-
+      Aligns the SearXNG tool with the Brave tool so the agent can swap
+      backends without special cases and tests can exercise both via similar
+      factories.
+  - file: tests/test_tools_searxng.py
+    change: add
+    marker: >-
+      New pytest module under tests/ alongside test_tools_brave.py.
+    description: >-
+      Add tests for SearxngSearchClient and create_searxng_search_tool,
+      covering request construction, parsing, and error handling.
+    justification: >-
+      Ensures the SearXNG integration behaves as expected and remains safe to
+      refactor.
+  - file: docs/TASKS.md
+    change: modify
+    marker: >-
+      Under the "Discovered During Work" section toward the end of the file.
+    description: >-
+      Add a bullet describing future work to expose advanced SearXNG
+      parameters (categories, language, time_range) as first-class options.
+    justification: >-
+      Documents planned follow-up work without expanding the current public
+      tool interface beyond query and max_results.
+requiredDependencies:
+  runtime: [ ]
+  dev: [ ]
+  notes: >-
+    Reuse existing httpx and pytest dependencies; no new runtime or dev
+    packages are required for this task.
+questions:
+  - "Should the SearXNG endpoint path ever need to differ from '/search' for specific deployments, we can extend SearXNGConfig with an endpoint_path field; for now this spec assumes /search is appropriate."
+  - "The SearXNG client supports optional categories, language, and time_range parameters via configuration and internal method arguments, but the public tool function remains minimal (query, max_results). A future task may decide how much of this configurability should be surfaced to callers (agent, CLI, MCP)."
