@@ -12,8 +12,9 @@ from pydantic import BaseModel, Field
 class SearchResult(BaseModel):
     """Normalized representation of a single search result.
 
-    This model is backend-agnostic and can represent results from any
-    search backend (Brave, SearXNG, etc.).
+    This model is intentionally backend-agnostic: backend-specific data stays
+    inside ``raw`` so the public surface remains stable across Brave, SearXNG,
+    or other future providers.
     """
 
     title: str = Field(..., description="Title of the search result")
@@ -33,8 +34,9 @@ class SearchResult(BaseModel):
 class SearchResults(BaseModel):
     """Container for normalized search results from any backend.
 
-    This model aggregates search results with metadata and supports
-    multiple backends through a single, consistent interface.
+    ``backend`` identifies the source (e.g., "brave" or "searxng") while
+    ``raw`` holds the backend-specific payload so callers can inspect additional
+    metadata without expanding this model whenever a provider adds fields.
     """
 
     query: str = Field(..., description="Original search query")
